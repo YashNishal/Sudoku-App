@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Sudoku</string>
+    <string name="title_activity_primary">PrimaryActivity</string>
 </resources>
