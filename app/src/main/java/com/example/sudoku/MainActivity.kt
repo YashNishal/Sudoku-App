@@ -56,6 +56,9 @@ fun Buttons() {
         Button(onClick = { onClick("hard", context)  }, colors = ButtonDefaults.buttonColors(Color.Red)) {
             Text(text = "Hard", fontSize = 30.sp, color = Color.White)
         }
+        Button(onClick = { onClick("random", context)  }, colors = ButtonDefaults.buttonColors(Color.Magenta)) {
+            Text(text = "Random", fontSize = 30.sp, color = Color.White)
+        }
     }
 }
 
