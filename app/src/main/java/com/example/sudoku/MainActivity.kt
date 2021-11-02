@@ -22,6 +22,8 @@ import com.example.sudoku.ui.theme.Orange
 import com.example.sudoku.ui.theme.SudokuTheme
 import kotlin.coroutines.coroutineContext
 
+var matrix = Array(9) { IntArray(9) }
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,11 +86,40 @@ fun getData(difficulty: String,context: Context) {
         { response ->
             // Display the first 500 characters of the response string.
             Log.e("RESPONSE : $difficulty ",response.toString() )
+            initialiseMatrix(response.toString())
         },
         { Log.e("RESPONSE : ","Error") })
 
     // Add the request to the RequestQueue.
     queue.add(stringRequest)
+}
+
+fun initialiseMatrix(response: String) {
+    Log.e("string : ",response)
+
+    var k : Int = 11
+    var _i : Int = 0
+    var _j : Int = 0
+    while(true) {
+        val c : Char = response[k]
+        if(c == ']')
+            break
+        if(c == ','){
+            _i++
+            _j = 0
+            k += 2
+            continue
+        }
+        matrix[_i][_j] = c-'0'
+        _j++
+        k += 2
+    }
+
+    for( i in 0..8) {
+        for(j in 0..8) {
+            Log.e("  i = $i  j = $j : value = ","${matrix[i][j]}")
+        }
+    }
 }
 
 @Preview(showBackground = true)
