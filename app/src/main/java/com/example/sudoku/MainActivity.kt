@@ -2,6 +2,7 @@ package com.example.sudoku
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,8 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.Orange
 import com.example.sudoku.ui.theme.SudokuTheme
 import kotlin.coroutines.coroutineContext
@@ -68,6 +71,24 @@ fun Buttons() {
 
 fun onClick(difficulty: String, context: Context) {
     Toast.makeText(context, difficulty, Toast.LENGTH_SHORT).show();
+    getData(difficulty,context)
+}
+
+fun getData(difficulty: String,context: Context) {
+    val queue = Volley.newRequestQueue(context)
+    val url = "https://sugoku.herokuapp.com/board?difficulty=${difficulty}"
+
+    // Request a string response from the provided URL.
+    val stringRequest = StringRequest(
+        Request.Method.GET, url,
+        { response ->
+            // Display the first 500 characters of the response string.
+            Log.e("RESPONSE : $difficulty ",response.toString() )
+        },
+        { Log.e("RESPONSE : ","Error") })
+
+    // Add the request to the RequestQueue.
+    queue.add(stringRequest)
 }
 
 @Preview(showBackground = true)
