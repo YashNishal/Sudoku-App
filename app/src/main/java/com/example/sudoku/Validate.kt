@@ -1,30 +1,31 @@
 package com.example.sudoku
 
+
 fun Check() : Boolean {
-   return false
+
+   val used_rows = Array(9) { IntArray(10) }
+   val used_cols = Array(9) { IntArray(10) }
+   val used_submatrix = Array(9) { IntArray(10) }
+
+   for(i in 0..8) {
+      for(j in 0..8) {
+         if(matrix[i][j] != 0 ) {
+            val num = matrix[i][j]
+            val k = (i/3)*3 + j/3
+            if(used_rows[i][num] == 1 || used_cols[j][num] ==1 || used_submatrix[k][num] == 1) {
+               return false
+            }
+            used_rows[i][num] = 1
+            used_cols[j][num] = 1
+            used_submatrix[k][num] = 1
+         }
+      }
+   }
+   return true
 }
 
-//for(int i = 0 ; i < 9 ; i++) {
-//    if(i == r)
-//        continue;
-//    if(arr[r][c] == arr[i][c])
-//        return false;
-//}
-//
-//for(int i = 0 ; i < 9 ; i++) {
-//    if(i == c)
-//        continue;
-//    if(arr[r][c] == arr[r][i])
-//        return false;
-//}
-//int r1 =(r/3)*3;
-//int c1 =(c/3)*3;
-//for(int i = 0 ; i <  3; i++) {
-//    for(int j = 0 ; j < 3 ; j++) {
-//        if(i+r1 == r and j+c1 == c)
-//            continue;
-//        if(arr[r][c] == arr[i+r1][j+c1])
-//            return false;
-//    }
-//}
-//return true;
+
+
+fun getSolution() {
+
+}

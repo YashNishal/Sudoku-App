@@ -1,6 +1,7 @@
 package com.example.sudoku
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -17,11 +18,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.sudoku.ui.theme.Purple
+import com.example.sudoku.ui.theme.Purple200
 import com.example.sudoku.ui.theme.SudokuTheme
-import kotlinx.coroutines.coroutineScope
 
 val example = listOf<List<String>>(listOf("9","8","1","3","6","2","0","0","7"), listOf("3","0","0","1","6","7","2","5","4"), listOf("2","6","7","5","4","3","9","0","1"), listOf("9","8","1","3","6","0","0","0","0"), listOf("2","6","7","5","4","3","9","8","1"), listOf("3","9","0","1","6","7","0","0","4"), listOf("2","6","7","5","0","3","0","8","1"), listOf("3","9","8","1","6","7","2","5","4"), listOf("9","8","1","3","6","0","5","4","0"))
-var change = ""
+var change = "1"
 
 class PrimaryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,7 @@ class PrimaryActivity : ComponentActivity() {
                 Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
                         Grid()
+                        MiddleButtons()
                         DefNums()
                     }
                 }
@@ -40,7 +43,58 @@ class PrimaryActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun MiddleButtons() {
+    Row(horizontalArrangement = Arrangement.SpaceAround,verticalAlignment = Alignment.CenterVertically) {
+        CheckButton()
+        SolveButton()
+    }
+}
 
+@Composable
+fun CheckButton() {
+    val context = LocalContext.current
+    Box(modifier = Modifier
+        .height(50.dp)
+        .width(70.dp)
+        .clip(RoundedCornerShape(100))
+        .background(Purple)
+        .clickable {
+            if (Check()) {
+                Toast
+                    .makeText(context, "Correct!", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast
+                    .makeText(context, "Incorrect.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }) {
+        Text(text = "Validate" ,Modifier.align(Alignment.Center))
+    }
+}
+
+@Composable
+fun SolveButton() {
+    Box(modifier = Modifier
+        .height(50.dp)
+        .width(70.dp)
+        .clip(RoundedCornerShape(100))
+        .background(Purple)
+        .clickable {
+//            if (Check()) {
+//                Toast
+//                    .makeText(context, "Correct!", Toast.LENGTH_SHORT)
+//                    .show()
+//            } else {
+//                Toast
+//                    .makeText(context, "Incorrect.", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+        }) {
+        Text(text = "Solution" ,Modifier.align(Alignment.Center))
+    }
+}
 
 // Sudoku Grid and Cells
 @Composable
@@ -143,10 +197,9 @@ fun DefNums() {
 }
 
 @Composable
-fun Dial(num: String = "") {
+fun Dial(num: String = "",selected : Boolean = false) {
     val context = LocalContext.current
-//    val selected = remember{ mutableStateOf(false)}
-
+    var isSelected = selected
     Box(
         Modifier
             .height(60.dp)
@@ -158,6 +211,7 @@ fun Dial(num: String = "") {
             .background(Color.White)
             .clickable {
                 change = num
+                isSelected = true
             }) {
         Text(text = num, Modifier.align(Alignment.Center))
     }
@@ -169,6 +223,7 @@ fun DefaultPreview2() {
     Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
             Grid()
+            MiddleButtons()
             DefNums()
         }
     }
