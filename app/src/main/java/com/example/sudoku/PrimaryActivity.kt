@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sudoku.ui.theme.SudokuTheme
+import kotlinx.coroutines.coroutineScope
 
 val example = listOf<List<String>>(listOf("9","8","1","3","6","2","0","0","7"), listOf("3","0","0","1","6","7","2","5","4"), listOf("2","6","7","5","4","3","9","0","1"), listOf("9","8","1","3","6","0","0","0","0"), listOf("2","6","7","5","4","3","9","8","1"), listOf("3","9","0","1","6","7","0","0","4"), listOf("2","6","7","5","0","3","0","8","1"), listOf("3","9","8","1","6","7","2","5","4"), listOf("9","8","1","3","6","0","5","4","0"))
 var change = ""
@@ -31,7 +33,10 @@ class PrimaryActivity : ComponentActivity() {
             SudokuTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = Color.Black) {
-
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
+                        Grid()
+                        DefNums()
+                    }
                 }
             }
         }
@@ -65,8 +70,6 @@ fun Grid() {
 
 @Composable
 fun SubGrid(i:Int) {
-    val iv = hashSetOf<String>()
-
     val row : Int = (i/3)*3
     val col : Int = (i%3)*3
     Column(Modifier.padding(1.dp)) {
