@@ -39,6 +39,7 @@ class PrimaryActivity : ComponentActivity() {
 }
 
 
+
 // Sudoku Grid and Cells
 @Composable
 fun Grid() {
@@ -70,27 +71,27 @@ fun SubGrid(i:Int) {
     val col : Int = (i%3)*3
     Column(Modifier.padding(1.dp)) {
         Row {
-            Cell(example[row][col], iv)
-            Cell(example[row][col+1], iv)
-            Cell(example[row][col+2], iv)
+            Cell(row, col)
+            Cell(row, col+1)
+            Cell(row, col+2)
         }
         Row {
-            Cell(example[row+1][col], iv)
-            Cell(example[row+1][col+1], iv)
-            Cell(example[row+1][col+2], iv)
+            Cell(row+1,col)
+            Cell(row+1,col+1)
+            Cell(row+1,col+2)
         }
         Row {
-            Cell(example[row+2][col], iv)
-            Cell(example[row+2][col+1], iv)
-            Cell(example[row+2][col+2], iv)
+            Cell(row+2,col)
+            Cell(row+2,col+1)
+            Cell(row+2,col+2)
         }
     }
 }
 
 @Composable
-fun Cell(num: String = "", iv: HashSet<String>) {
+fun Cell(row: Int, col: Int) {
     val context = LocalContext.current
-    if (num != "0") iv.add(num)
+    val num = example[row][col]
     val number = remember{ mutableStateOf(if (num == "0") "" else num) }
     val fixed = remember{ mutableStateOf(num != "0") }
     val color = Color.LightGray
@@ -105,11 +106,9 @@ fun Cell(num: String = "", iv: HashSet<String>) {
             )
             .background(color)
             .clickable {
-                if (!fixed.value and !iv.contains(change)) {
+                if (!fixed.value) {
                     // Color Change
-                    if (number.value != "0") iv.remove(number.value)
                     number.value = change
-                    iv.add(number.value)
                 }
             }
     ) {
