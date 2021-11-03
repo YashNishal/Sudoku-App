@@ -32,7 +32,7 @@ class PrimaryActivity : ComponentActivity() {
         setContent {
             SudokuTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(color = Color.Black) {
+                Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
                         Grid()
                         DefNums()
@@ -94,7 +94,7 @@ fun SubGrid(i:Int) {
 @Composable
 fun Cell(row: Int, col: Int) {
     val context = LocalContext.current
-    val num = example[row][col]
+    val num = matrix[row][col].toString()
     val number = remember{ mutableStateOf(if (num == "0") "" else num) }
     val fixed = remember{ mutableStateOf(num != "0") }
     val color = Color.LightGray
@@ -112,11 +112,12 @@ fun Cell(row: Int, col: Int) {
                 if (!fixed.value) {
                     // Color Change
                     number.value = change
+                    matrix[row][col] = change.toInt()
                 }
             }
     ) {
         Text(text = number.value, Modifier.align(Alignment.Center),
-            fontWeight = if(fixed.value)  FontWeight.Bold else FontWeight.Normal)
+            fontWeight = if(fixed.value)  FontWeight.ExtraBold else FontWeight.Light)
     }
 }
 

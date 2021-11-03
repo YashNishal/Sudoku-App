@@ -1,6 +1,7 @@
 package com.example.sudoku
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -15,14 +16,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.Orange
 import com.example.sudoku.ui.theme.SudokuTheme
-import kotlin.coroutines.coroutineContext
 
-var matrix = Array(9) { IntArray(9) }
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +74,9 @@ fun Buttons() {
 
 fun onClick(difficulty: String, context: Context) {
     Toast.makeText(context, difficulty, Toast.LENGTH_SHORT).show();
+
     getData(difficulty,context)
+
 }
 
 fun getData(difficulty: String,context: Context) {
@@ -85,17 +88,17 @@ fun getData(difficulty: String,context: Context) {
         Request.Method.GET, url,
         { response ->
             // Display the first 500 characters of the response string.
-            Log.e("RESPONSE : $difficulty ",response.toString() )
-            initialiseMatrix(response.toString())
+            Log.d("RESPONSE : $difficulty ",response.toString() )
+            initialiseMatrix(response.toString(),context)
         },
-        { Log.e("RESPONSE : ","Error") })
+        { Log.d("RESPONSE : ","Error") })
 
     // Add the request to the RequestQueue.
     queue.add(stringRequest)
 }
 
-fun initialiseMatrix(response: String) {
-    Log.e("string : ",response)
+fun initialiseMatrix(response: String,context: Context) {
+    Log.d("string : ",response)
 
     var k : Int = 11
     var _i : Int = 0
@@ -117,9 +120,12 @@ fun initialiseMatrix(response: String) {
 
     for( i in 0..8) {
         for(j in 0..8) {
-            Log.e("  i = $i  j = $j : value = ","${matrix[i][j]}")
+            Log.d("  i = $i  j = $j : value = ","${matrix[i][j]}")
         }
     }
+
+    startActivity(context,Intent(context,PrimaryActivity::class.java),null)
+    Log.e("matrix :" , " initialised")
 }
 
 @Preview(showBackground = true)
