@@ -120,7 +120,10 @@ fun Cell(row: Int, col: Int) {
 // Number Pad
 @Composable
 fun DefNums() {
-    Column(Modifier.padding(1.dp)) {
+    Column(
+        Modifier
+            .padding(1.dp)
+            .clickable { }) {
         Row {
             Dial( "1")
             Dial( "2")
@@ -134,7 +137,7 @@ fun DefNums() {
         Row {
             Dial( "7")
             Dial( "8")
-            Dial("9")
+            Dial( "9")
         }
     }
 }
@@ -142,7 +145,7 @@ fun DefNums() {
 @Composable
 fun Dial(num: String = "") {
     val context = LocalContext.current
-    val selected = remember{ mutableStateOf(num == change)}
+//    val selected = remember{ mutableStateOf(false)}
 
     Box(
         Modifier
@@ -152,18 +155,13 @@ fun Dial(num: String = "") {
             .clip(
                 RoundedCornerShape(5.dp)
             )
-            .background(if (selected.value) Color.LightGray else Color.White)
+            .background(Color.White)
             .clickable {
                 change = num
-                selected.value = true
             }) {
         Text(text = num, Modifier.align(Alignment.Center))
     }
 }
-
-//fun change(sel: MutableState<Boolean>) {
-//    sel.value = false;
-//}
 
 @Preview(showBackground = true)
 @Composable
