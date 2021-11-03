@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sudoku.ui.theme.SudokuTheme
@@ -41,7 +42,7 @@ class PrimaryActivity : ComponentActivity() {
 // Sudoku Grid and Cells
 @Composable
 fun Grid() {
-    Column(Modifier.padding(1.dp)) {
+    Column(Modifier.padding(2.dp)) {
         Row {
             SubGrid(0)
             SubGrid(1)
@@ -64,21 +65,24 @@ fun Grid() {
 @Composable
 fun SubGrid(i:Int) {
     val iv = hashSetOf<String>()
+
+    val row : Int = (i/3)*3
+    val col : Int = (i%3)*3
     Column(Modifier.padding(1.dp)) {
         Row {
-            Cell(example[i][0], iv)
-            Cell(example[i][1], iv)
-            Cell(example[i][2], iv)
+            Cell(example[row][col], iv)
+            Cell(example[row][col+1], iv)
+            Cell(example[row][col+2], iv)
         }
         Row {
-            Cell(example[i][3], iv)
-            Cell(example[i][4], iv)
-            Cell(example[i][5], iv)
+            Cell(example[row+1][col], iv)
+            Cell(example[row+1][col+1], iv)
+            Cell(example[row+1][col+2], iv)
         }
         Row {
-            Cell(example[i][6], iv)
-            Cell(example[i][7], iv)
-            Cell(example[i][8], iv)
+            Cell(example[row+2][col], iv)
+            Cell(example[row+2][col+1], iv)
+            Cell(example[row+2][col+2], iv)
         }
     }
 }
@@ -89,7 +93,7 @@ fun Cell(num: String = "", iv: HashSet<String>) {
     if (num != "0") iv.add(num)
     val number = remember{ mutableStateOf(if (num == "0") "" else num) }
     val fixed = remember{ mutableStateOf(num != "0") }
-    var col = Color.White
+    val color = Color.LightGray
 
     Box(
         Modifier
@@ -97,9 +101,9 @@ fun Cell(num: String = "", iv: HashSet<String>) {
             .width(40.dp)
             .padding(2.dp)
             .clip(
-                RoundedCornerShape(5.dp)
+                RoundedCornerShape(2.dp)
             )
-            .background(col)
+            .background(color)
             .clickable {
                 if (!fixed.value and !iv.contains(change)) {
                     // Color Change
@@ -107,8 +111,10 @@ fun Cell(num: String = "", iv: HashSet<String>) {
                     number.value = change
                     iv.add(number.value)
                 }
-            }) {
-        Text(text = number.value, Modifier.align(Alignment.Center))
+            }
+    ) {
+        Text(text = number.value, Modifier.align(Alignment.Center),
+            fontWeight = if(fixed.value)  FontWeight.Bold else FontWeight.Normal)
     }
 }
 
