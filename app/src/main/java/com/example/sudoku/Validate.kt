@@ -1,7 +1,7 @@
 package com.example.sudoku
 
 
-fun Check() : Boolean {
+fun check() : Boolean {
 
    val used_rows = Array(9) { IntArray(10) }
    val used_cols = Array(9) { IntArray(10) }
@@ -26,6 +26,55 @@ fun Check() : Boolean {
 
 
 
-fun getSolution() {
+fun getSolution() : Boolean {
+   return solve(0,0);
+}
 
+// utility function for getSolution
+private fun solve(r : Int , c : Int) : Boolean {
+   if(r == 9)
+      return true;
+   var r1 : Int = r
+   var c1 : Int = c
+   if(c == 8) {
+      r1++
+      c1 = 0
+   } else {
+      c1++
+   }
+
+   if(original[r][c] != 0)
+      return solve(r1,c1)
+   else {
+      for(i in 1..9) {
+         if(isValid(r,c,i)) {
+            original[r][c] = i
+            if(solve(r1,c1))
+               return true
+            original[r][c] = 0
+         }
+      }
+   }
+   return false
+}
+
+// utility function for getSolution
+private fun isValid(r : Int,c : Int,value : Int) : Boolean {
+
+   //checking row and column
+   for(i in 0..8) {
+      if(value == original[i][c] || value == original[r][i])
+         return false
+   }
+
+   val r1 = (r/3)*3
+   val c1 = (c/3)*3
+
+   for(i in 0..2) {
+      for(j in 0..2) {
+         if(value == original[r1+i][c1+j])
+            return false
+      }
+   }
+   return true
 }

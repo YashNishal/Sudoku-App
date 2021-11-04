@@ -1,6 +1,7 @@
 package com.example.sudoku
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -60,7 +61,7 @@ fun CheckButton() {
         .clip(RoundedCornerShape(100))
         .background(Purple)
         .clickable {
-            if (Check()) {
+            if (check()) {
                 Toast
                     .makeText(context, "Correct!", Toast.LENGTH_SHORT)
                     .show()
@@ -76,21 +77,25 @@ fun CheckButton() {
 
 @Composable
 fun SolveButton() {
+    val context = LocalContext.current
     Box(modifier = Modifier
         .height(50.dp)
         .width(70.dp)
         .clip(RoundedCornerShape(100))
         .background(Purple)
         .clickable {
-//            if (Check()) {
-//                Toast
-//                    .makeText(context, "Correct!", Toast.LENGTH_SHORT)
-//                    .show()
-//            } else {
-//                Toast
-//                    .makeText(context, "Incorrect.", Toast.LENGTH_SHORT)
-//                    .show()
-//            }
+            Log.d("Before getSolution : ", original.contentDeepToString())
+            if (getSolution()) {
+                Toast
+                    .makeText(context, "got the solution!", Toast.LENGTH_SHORT)
+                    .show()
+                Log.d("Original Matrix : ", original.contentDeepToString())
+            } else {
+                Toast
+                    .makeText(context, "unable to get the solution!.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            Log.d("After getSolution : ", original.contentDeepToString())
         }) {
         Text(text = "Solution" ,Modifier.align(Alignment.Center))
     }

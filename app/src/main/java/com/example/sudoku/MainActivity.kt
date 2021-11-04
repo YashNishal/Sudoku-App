@@ -114,6 +114,7 @@ fun initialiseMatrix(response: String,context: Context) {
             continue
         }
         matrix[_i][_j] = c-'0'
+        original[_i][_j] = c-'0'
         _j++
         k += 2
     }
