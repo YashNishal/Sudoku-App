@@ -66,6 +66,7 @@ fun App() {
     }
 }
 
+// Kuch hua kya
 fun Array<IntArray>.copy() = Array(size) { get(it).clone() }
 
 @Composable
