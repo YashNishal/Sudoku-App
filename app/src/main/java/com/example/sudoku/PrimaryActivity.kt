@@ -46,23 +46,26 @@ fun App() {
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
-                if (solution.value) {
-                    matrix = original.copy()
-                    Grid()
-                }
-                else
-                    Grid()
-                when {
-                    correct.value -> {
-                        FinalScreen(text = "Victory!", color = Color.Green)
+            Column() {
+                BackButton()
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxSize()) {
+                    if (solution.value) {
+                        matrix = original.copy()
+                        Grid()
                     }
-                    solution.value -> {
-                        FinalScreen(text = "GAME OVER!", color = Color.Red)
-                    }
-                    else -> {
-                        MiddleButtons(solution, correct)
-                        DefNums()
+                    else
+                        Grid()
+                    when {
+                        correct.value -> {
+                            FinalScreen(text = "Victory!", color = Color.Green)
+                        }
+                        solution.value -> {
+                            FinalScreen(text = "GAME OVER!", color = Color.Red)
+                        }
+                        else -> {
+                            MiddleButtons(solution, correct)
+                            DefNums()
+                        }
                     }
                 }
             }
@@ -87,7 +90,7 @@ fun BackButton() {
         )
     }
 }
-// Kuch hua kya
+
 fun Array<IntArray>.copy() = Array(size) { get(it).clone() }
 
 @Composable
