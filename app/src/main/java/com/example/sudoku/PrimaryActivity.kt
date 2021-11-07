@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,10 +52,10 @@ fun App() {
                 else
                     Grid()
                 if (correct.value) {
-
+                    FinalScreen(text = "Victory!", color = Color.Green)
                 }
                 else if (solution.value){
-
+                    FinalScreen(text = "GAME OVER!", color = Color.Red)
                 }
                 else {
                     MiddleButtons(solution, correct)
@@ -67,6 +68,13 @@ fun App() {
 
 fun Array<IntArray>.copy() = Array(size) { get(it).clone() }
 
+@Composable
+fun FinalScreen(text: String, color: Color) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
+        Text(text=text, fontSize = 70.sp, color = color, textAlign = TextAlign.Center)
+//        BackButton()
+    }
+}
 
 @Composable
 fun MiddleButtons(solution: MutableState<Boolean>, correct: MutableState<Boolean>) {
