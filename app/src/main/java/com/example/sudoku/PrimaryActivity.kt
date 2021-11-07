@@ -24,34 +24,41 @@ import com.example.sudoku.ui.theme.BrightBlue
 import com.example.sudoku.ui.theme.SudokuTheme
 import com.example.sudoku.ui.theme.TextWhite
 
-val example = listOf<List<String>>(listOf("9","8","1","3","6","2","0","0","7"), listOf("3","0","0","1","6","7","2","5","4"), listOf("2","6","7","5","4","3","9","0","1"), listOf("9","8","1","3","6","0","0","0","0"), listOf("2","6","7","5","4","3","9","8","1"), listOf("3","9","0","1","6","7","0","0","4"), listOf("2","6","7","5","0","3","0","8","1"), listOf("3","9","8","1","6","7","2","5","4"), listOf("9","8","1","3","6","0","5","4","0"))
 var change = "1"
 
 class PrimaryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SudokuTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
-                        Grid()
-                        MiddleButtons()
-                        DefNums()
-                    }
-                }
+            App()
+        }
+    }
+}
+
+@Composable
+fun App() {
+    val solution = remember{ mutableStateOf(false)}
+    SudokuTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
+                if (solution.value) { matrix = original.clone()
+                    Grid() }
+                else {Grid()}
+                MiddleButtons(solution)
+                DefNums()
             }
         }
     }
 }
 
 @Composable
-fun MiddleButtons() {
+fun MiddleButtons(solution: MutableState<Boolean>) {
     Row(horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,modifier = Modifier.fillMaxWidth()
     ) {
         ValidateButton()
-        SolveButton()
+        SolveButton(solution)
     }
 }
 
@@ -86,7 +93,7 @@ fun ValidateButton() {
 }
 
 @Composable
-fun SolveButton() {
+fun SolveButton(solution: MutableState<Boolean>) {
     val context = LocalContext.current
     Box(modifier = Modifier
         .padding(15.dp)
@@ -106,6 +113,7 @@ fun SolveButton() {
                     .show()
             }
             Log.d("After getSolution : ", original.contentDeepToString())
+            solution.value = true
         }) {
         Text(text = "Solution",
             color = TextWhite,
@@ -195,7 +203,7 @@ fun Cell(row: Int, col: Int) {
 // Number Pad
 @Composable
 fun DefNums() {
-    val rels = listOf(remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) })
+    val rels = listOf(remember { mutableStateOf(true) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) })
     Column(
         Modifier
             .padding(1.dp)
@@ -248,11 +256,5 @@ fun disableAll(rels: List<MutableState<Boolean>>) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview2() {
-    Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
-            Grid()
-            MiddleButtons()
-            DefNums()
-        }
-    }
+        App()
 }
