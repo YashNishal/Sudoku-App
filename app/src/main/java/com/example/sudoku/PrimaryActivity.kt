@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.example.sudoku.ui.theme.BrightBlue
 import com.example.sudoku.ui.theme.SudokuTheme
 import com.example.sudoku.ui.theme.TextWhite
+import java.util.Arrays.copyOf
 
 var change = "1"
 
@@ -42,15 +43,20 @@ fun App() {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
-                if (solution.value) { matrix = original.clone()
-                    Grid() }
-                else {Grid()}
+                if (solution.value) {
+                    matrix = original.copy()
+                    Grid()
+                }
+                else
+                    Grid()
                 MiddleButtons(solution)
                 DefNums()
             }
         }
     }
 }
+
+fun Array<IntArray>.copy() = Array(size) { get(it).clone() }
 
 @Composable
 fun MiddleButtons(solution: MutableState<Boolean>) {
