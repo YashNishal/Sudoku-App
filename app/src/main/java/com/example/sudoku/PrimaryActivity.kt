@@ -119,6 +119,16 @@ fun ValidateButton(correct: MutableState<Boolean>) {
         .background(BrightBlue)
         .clickable {
             if (check()) {
+                var noZero = true
+                for(i in 0..8)
+                    for(j in 0..8)
+                        if(matrix[i][j] == 0 ) {
+                            noZero = false
+                            break;
+                        }
+                if(noZero)
+                    correct.value = true
+
                 Toast
                     .makeText(context, "Correct!", Toast.LENGTH_SHORT)
                     .show()
