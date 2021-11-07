@@ -14,17 +14,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusTarget
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.sudoku.ui.theme.Purple
-import com.example.sudoku.ui.theme.Purple200
+import androidx.compose.ui.unit.sp
+import com.example.sudoku.ui.theme.BrightBlue
 import com.example.sudoku.ui.theme.SudokuTheme
+import com.example.sudoku.ui.theme.TextWhite
 
 val example = listOf<List<String>>(listOf("9","8","1","3","6","2","0","0","7"), listOf("3","0","0","1","6","7","2","5","4"), listOf("2","6","7","5","4","3","9","0","1"), listOf("9","8","1","3","6","0","0","0","0"), listOf("2","6","7","5","4","3","9","8","1"), listOf("3","9","0","1","6","7","0","0","4"), listOf("2","6","7","5","0","3","0","8","1"), listOf("3","9","8","1","6","7","2","5","4"), listOf("9","8","1","3","6","0","5","4","0"))
 var change = "1"
@@ -49,20 +47,23 @@ class PrimaryActivity : ComponentActivity() {
 
 @Composable
 fun MiddleButtons() {
-    Row(horizontalArrangement = Arrangement.SpaceAround,verticalAlignment = Alignment.CenterVertically) {
-        CheckButton()
+    Row(horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,modifier = Modifier.fillMaxWidth()
+    ) {
+        ValidateButton()
         SolveButton()
     }
 }
 
 @Composable
-fun CheckButton() {
+fun ValidateButton() {
     val context = LocalContext.current
     Box(modifier = Modifier
+        .padding(15.dp)
         .height(50.dp)
         .width(70.dp)
-        .clip(RoundedCornerShape(100))
-        .background(Purple)
+        .clip(RoundedCornerShape(10.dp))
+        .background(BrightBlue)
         .clickable {
             if (check()) {
                 Toast
@@ -74,7 +75,13 @@ fun CheckButton() {
                     .show()
             }
         }) {
-        Text(text = "Validate" ,Modifier.align(Alignment.Center))
+        Text(text = "Validate",
+            color = TextWhite,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.Center)
+        )
     }
 }
 
@@ -82,17 +89,17 @@ fun CheckButton() {
 fun SolveButton() {
     val context = LocalContext.current
     Box(modifier = Modifier
+        .padding(15.dp)
         .height(50.dp)
         .width(70.dp)
-        .clip(RoundedCornerShape(100))
-        .background(Purple)
+        .clip(RoundedCornerShape(10.dp))
+        .background(BrightBlue)
         .clickable {
             Log.d("Before getSolution : ", original.contentDeepToString())
             if (getSolution()) {
                 Toast
                     .makeText(context, "got the solution!", Toast.LENGTH_SHORT)
                     .show()
-                Log.d("Original Matrix : ", original.contentDeepToString())
             } else {
                 Toast
                     .makeText(context, "unable to get the solution!.", Toast.LENGTH_SHORT)
@@ -100,7 +107,13 @@ fun SolveButton() {
             }
             Log.d("After getSolution : ", original.contentDeepToString())
         }) {
-        Text(text = "Solution" ,Modifier.align(Alignment.Center))
+        Text(text = "Solution",
+            color = TextWhite,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+            .align(Alignment.Center)
+        )
     }
 }
 
