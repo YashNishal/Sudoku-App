@@ -53,6 +53,9 @@ fun App() {
                 if (correct.value) {
 
                 }
+                else if (solution.value){
+
+                }
                 else {
                     MiddleButtons(solution, correct)
                     DefNums()
@@ -63,6 +66,7 @@ fun App() {
 }
 
 fun Array<IntArray>.copy() = Array(size) { get(it).clone() }
+
 
 @Composable
 fun MiddleButtons(solution: MutableState<Boolean>, correct: MutableState<Boolean>) {
