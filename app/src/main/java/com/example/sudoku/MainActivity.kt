@@ -74,9 +74,7 @@ fun Buttons() {
 
 fun onClick(difficulty: String, context: Context) {
     Toast.makeText(context, difficulty, Toast.LENGTH_SHORT).show();
-
     getData(difficulty,context)
-
 }
 
 fun getData(difficulty: String,context: Context) {

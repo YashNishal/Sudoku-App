@@ -1,5 +1,6 @@
 package com.example.sudoku
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,21 +53,40 @@ fun App() {
                 }
                 else
                     Grid()
-                if (correct.value) {
-                    FinalScreen(text = "Victory!", color = Color.Green)
-                }
-                else if (solution.value){
-                    FinalScreen(text = "GAME OVER!", color = Color.Red)
-                }
-                else {
-                    MiddleButtons(solution, correct)
-                    DefNums()
+                when {
+                    correct.value -> {
+                        FinalScreen(text = "Victory!", color = Color.Green)
+                    }
+                    solution.value -> {
+                        FinalScreen(text = "GAME OVER!", color = Color.Red)
+                    }
+                    else -> {
+                        MiddleButtons(solution, correct)
+                        DefNums()
+                    }
                 }
             }
         }
     }
 }
+@Composable
+fun BackButton() {
+    val activity = (LocalContext.current as? Activity)
+    Box(contentAlignment = Alignment.TopStart , modifier = Modifier.fillMaxWidth()) {
+        Icon(painter = painterResource(id = R.drawable.ic_back),
+            contentDescription = "Back",tint = Color.White,
+            modifier = Modifier
+                .padding(15.dp)
+                .clip(RoundedCornerShape(100))
+                .background(BrightBlue)
+                .padding(15.dp)
+                .clickable {
 
+                    activity?.finish()
+                }
+        )
+    }
+}
 // Kuch hua kya
 fun Array<IntArray>.copy() = Array(size) { get(it).clone() }
 
@@ -145,7 +166,7 @@ fun SolveButton(solution: MutableState<Boolean>) {
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-            .align(Alignment.Center)
+                .align(Alignment.Center)
         )
     }
 }
@@ -281,5 +302,5 @@ fun disableAll(rels: List<MutableState<Boolean>>) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview2() {
-        App()
+    App()
 }
