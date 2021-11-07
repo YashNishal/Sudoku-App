@@ -39,6 +39,7 @@ class PrimaryActivity : ComponentActivity() {
 @Composable
 fun App() {
     val solution = remember{ mutableStateOf(false)}
+    val correct = remember{ mutableStateOf(false)}
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
@@ -49,8 +50,13 @@ fun App() {
                 }
                 else
                     Grid()
-                MiddleButtons(solution)
-                DefNums()
+                if (correct.value) {
+
+                }
+                else {
+                    MiddleButtons(solution, correct)
+                    DefNums()
+                }
             }
         }
     }
@@ -59,17 +65,17 @@ fun App() {
 fun Array<IntArray>.copy() = Array(size) { get(it).clone() }
 
 @Composable
-fun MiddleButtons(solution: MutableState<Boolean>) {
+fun MiddleButtons(solution: MutableState<Boolean>, correct: MutableState<Boolean>) {
     Row(horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,modifier = Modifier.fillMaxWidth()
     ) {
-        ValidateButton()
+        ValidateButton(correct)
         SolveButton(solution)
     }
 }
 
 @Composable
-fun ValidateButton() {
+fun ValidateButton(correct: MutableState<Boolean>) {
     val context = LocalContext.current
     Box(modifier = Modifier
         .padding(15.dp)
