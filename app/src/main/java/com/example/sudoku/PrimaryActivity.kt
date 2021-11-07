@@ -14,6 +14,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -179,32 +182,32 @@ fun Cell(row: Int, col: Int) {
 // Number Pad
 @Composable
 fun DefNums() {
+    val rels = listOf(remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) })
     Column(
         Modifier
             .padding(1.dp)
             .clickable { }) {
         Row {
-            Dial( "1")
-            Dial( "2")
-            Dial( "3")
+            Dial( "1", rels)
+            Dial( "2", rels)
+            Dial( "3", rels)
         }
         Row {
-            Dial( "4")
-            Dial( "5")
-            Dial( "6")
+            Dial( "4", rels)
+            Dial( "5", rels)
+            Dial( "6", rels)
         }
         Row {
-            Dial( "7")
-            Dial( "8")
-            Dial( "9")
+            Dial( "7", rels)
+            Dial( "8", rels)
+            Dial( "9", rels)
         }
     }
 }
 
 @Composable
-fun Dial(num: String = "",selected : Boolean = false) {
+fun Dial(num: String = "", rels: List<MutableState<Boolean>>) {
     val context = LocalContext.current
-    var isSelected = selected
     Box(
         Modifier
             .height(60.dp)
@@ -213,12 +216,19 @@ fun Dial(num: String = "",selected : Boolean = false) {
             .clip(
                 RoundedCornerShape(5.dp)
             )
-            .background(Color.White)
+            .background(if (rels[num.toInt() - 1].value) Color.LightGray else Color.White)
             .clickable {
                 change = num
-                isSelected = true
+                disableAll(rels)
+                rels[num.toInt() - 1].value = true
             }) {
         Text(text = num, Modifier.align(Alignment.Center))
+    }
+}
+
+fun disableAll(rels: List<MutableState<Boolean>>) {
+    for (i in 0..8) {
+        rels[i].value = false
     }
 }
 
