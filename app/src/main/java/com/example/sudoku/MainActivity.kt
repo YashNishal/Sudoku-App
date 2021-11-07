@@ -74,6 +74,7 @@ fun Buttons() {
 
 fun onClick(difficulty: String, context: Context) {
     Toast.makeText(context, difficulty, Toast.LENGTH_SHORT).show();
+    change = "1"
     getData(difficulty,context)
 }
 
