@@ -80,6 +80,7 @@ fun SudokuApp() {
                 close()
             }
 
+
             // Light colored path
             val lightPoint1 = Offset(0f, height * 0.35f)
             val lightPoint2 = Offset(width * 0.1f, height * 0.4f)
