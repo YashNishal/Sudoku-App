@@ -2,8 +2,10 @@ package com.example.sudoku
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -38,10 +40,14 @@ import com.example.sudoku.ui.theme.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // for hiding title
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        window.apply {
+            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            statusBarColor = resources.getColor(R.color.transparent)
+        }
 
         super.onCreate(savedInstanceState)
         setContent {
@@ -120,7 +126,7 @@ fun SudokuApp() {
                 }
             }
         }
-        Text(text = "SUDOKU", fontSize = 50.sp, fontWeight = FontWeight.Light, color = TextWhite, letterSpacing = 1.5.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 40.dp))
+        Text(text = "SUDOKU", fontSize = 50.sp, fontWeight = FontWeight.Light, color = TextWhite, letterSpacing = 1.5.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 60.dp))
         Buttons()
     }
 }
