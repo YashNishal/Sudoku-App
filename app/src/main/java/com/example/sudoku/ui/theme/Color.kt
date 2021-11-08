@@ -23,8 +23,14 @@ val BrightBlue = Color(0xff2026AD)
 val Color1 = Color(0xff93a5cf)
 val Color2 = Color(0xffe4efe9)
 
+// Dark
+val DColor3 = Color(0xff434343)
+val DColor1 = Color(0xff29323c)
+val DColor2 = Color(0xff485563)
+val DColor0 = Color(0xff000000)
+
 // Button Colors
 val Easy = Color(0xB741ACFF)
 
 // Curves
-val Curve = Color(0xA4FFFFFF)
+val Curve = Color(0x7AFFFFFF)

@@ -3,18 +3,18 @@ package com.example.sudoku
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -23,18 +23,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.*
-import java.util.*
-import android.os.Looper
-
-
-
 
 
 class MainActivity : ComponentActivity() {
@@ -51,17 +48,17 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun SudokuApp() {
-    val delayController = remember { mutableStateOf<Boolean>(false) }
-
-    Handler(Looper.getMainLooper()).postDelayed(Runnable {
-        delayController.value = !delayController.value
-    }, 500)
-
+    val delayController = remember{ mutableStateOf(true)}
+    LaunchedEffect(true) {
+        stateChange(delayController)
+    }
+    val fc1 by animateColorAsState(targetValue = if (delayController.value) DColor0 else DColor1, infiniteRepeatable(
+        tween(5000)))
+    val fc2 by animateColorAsState(targetValue = if (delayController.value) DColor3 else DColor2,  infiniteRepeatable(
+        tween(5000)))
+    val fc = if (isSystemInDarkTheme()) listOf(Color1, Color2) else listOf(DColor1, DColor2)
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
-        BoxWithConstraints(Modifier.background(brush = Brush.linearGradient(colors = listOf(
-            Color1,
-            Color2
-        )))) {
+        BoxWithConstraints(Modifier.background(brush = Brush.linearGradient(colors = listOf(fc1, fc2)))) {
             val width = constraints.maxWidth*1.25f
             val height = constraints.maxHeight/2f
 
@@ -70,7 +67,7 @@ fun SudokuApp() {
             val mediumColoredPoint2 = Offset(width * 0.1f,height * 0.35f)
             val mediumColoredPoint3 = Offset(width* 0.4f,height * 0.05f)
             val mediumColoredPoint4 = Offset(width * 0.75f,height * 0.7f)
-            val mediumColoredPoint5 = Offset(width * 1.4f,-height.toFloat() )
+            val mediumColoredPoint5 = Offset(width * 1.4f,-height )
 
             val mediumColoredPath = Path().apply {
                 moveTo(mediumColoredPoint1.x,mediumColoredPoint1.y)
@@ -78,8 +75,8 @@ fun SudokuApp() {
                 standardQuadFromTo(mediumColoredPoint2,mediumColoredPoint3)
                 standardQuadFromTo(mediumColoredPoint3,mediumColoredPoint4)
                 standardQuadFromTo(mediumColoredPoint4,mediumColoredPoint5)
-                lineTo(width.toFloat() + 100f, height.toFloat()+300f)
-                lineTo(-100f, height.toFloat()+ 100f)
+                lineTo(width + 100f, height + 300f)
+                lineTo(-100f, height + 100f)
                 close()
             }
 
@@ -87,8 +84,8 @@ fun SudokuApp() {
             val lightPoint1 = Offset(0f, height * 0.35f)
             val lightPoint2 = Offset(width * 0.1f, height * 0.4f)
             val lightPoint3 = Offset(width * 0.3f, height * 0.35f)
-            val lightPoint4 = Offset(width * 0.65f, height.toFloat())
-            val lightPoint5 = Offset(width * 1.4f, -height.toFloat() / 3f)
+            val lightPoint4 = Offset(width * 0.65f, height)
+            val lightPoint5 = Offset(width * 1.4f, -height / 3f)
 
             val lightColoredPath = Path().apply {
                 moveTo(lightPoint1.x, lightPoint1.y)
@@ -96,8 +93,8 @@ fun SudokuApp() {
                 standardQuadFromTo(lightPoint2, lightPoint3)
                 standardQuadFromTo(lightPoint3, lightPoint4)
                 standardQuadFromTo(lightPoint4, lightPoint5)
-                lineTo(width.toFloat() + 100f, height.toFloat() + 100f)
-                lineTo(-100f, height.toFloat() + 100f)
+                lineTo(width + 100f, height + 100f)
+                lineTo(-100f, height + 100f)
                 close()
             }
             Column {
@@ -115,15 +112,16 @@ fun SudokuApp() {
                 }
             }
         }
+        Text(text = "SUDOKU", fontSize = 50.sp, fontWeight = FontWeight.Light, color = TextWhite, letterSpacing = 1.5.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 40.dp))
         Buttons()
     }
 }
-
 
 @Composable
 fun Buttons() {
     val context = LocalContext.current
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly) {
+        Spacer(modifier = Modifier.height(4.dp))
         Button(onClick = { onClick("easy", context) }, colors = ButtonDefaults.buttonColors(Easy)) {
             Text(text = "Easy", fontSize = 30.sp, color = TextWhite, fontWeight = FontWeight.Bold)
         }
