@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -44,14 +43,10 @@ fun SudokuApp() {
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
 
 @Composable
 fun Buttons() {
-    val context = LocalContext.current;
+    val context = LocalContext.current
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly) {
         Button(onClick = { onClick("easy", context) }, colors = ButtonDefaults.buttonColors(Color.Blue)) {
             Text(text = "Easy", fontSize = 30.sp, color = Color.White)
@@ -68,12 +63,9 @@ fun Buttons() {
     }
 }
 
-// 1 2 3
-// 4 5 6
-// 7 8 9
+
 
 fun onClick(difficulty: String, context: Context) {
-    Toast.makeText(context, difficulty, Toast.LENGTH_SHORT).show();
     change = "1"
     getData(difficulty,context)
 }
@@ -99,22 +91,22 @@ fun getData(difficulty: String,context: Context) {
 fun initialiseMatrix(response: String,context: Context) {
     Log.d("string : ",response)
 
-    var k : Int = 11
-    var _i : Int = 0
-    var _j : Int = 0
+    var k  = 11
+    var row  = 0
+    var col = 0
     while(true) {
         val c : Char = response[k]
         if(c == ']')
             break
         if(c == ','){
-            _i++
-            _j = 0
+            row++
+            col = 0
             k += 2
             continue
         }
-        matrix[_i][_j] = c-'0'
-        original[_i][_j] = c-'0'
-        _j++
+        matrix[row][col] = c-'0'
+        original[row][col] = c-'0'
+        col++
         k += 2
     }
 

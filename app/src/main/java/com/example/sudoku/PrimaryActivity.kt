@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import com.example.sudoku.ui.theme.BrightBlue
 import com.example.sudoku.ui.theme.SudokuTheme
 import com.example.sudoku.ui.theme.TextWhite
-import java.util.Arrays.copyOf
 
 var change = "1"
 
@@ -46,7 +45,7 @@ fun App() {
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
-            Column() {
+            Column {
                 BackButton()
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxSize()) {
                     if (solution.value) {
@@ -64,7 +63,7 @@ fun App() {
                         }
                         else -> {
                             MiddleButtons(solution, correct)
-                            DefNums()
+                            DialPad()
                         }
                     }
                 }
@@ -91,7 +90,7 @@ fun BackButton() {
     }
 }
 
-fun Array<IntArray>.copy() = Array(size) { get(it).clone() }
+
 
 @Composable
 fun FinalScreen(text: String, color: Color) {
@@ -127,7 +126,7 @@ fun ValidateButton(correct: MutableState<Boolean>) {
                     for(j in 0..8)
                         if(matrix[i][j] == 0 ) {
                             noZero = false
-                            break;
+                            break
                         }
                 if(noZero)
                     correct.value = true
@@ -232,7 +231,6 @@ fun SubGrid(i:Int) {
 
 @Composable
 fun Cell(row: Int, col: Int) {
-    val context = LocalContext.current
     val num = matrix[row][col].toString()
     val number = remember{ mutableStateOf(if (num == "0") "" else num) }
     val fixed = remember{ mutableStateOf(num != "0") }
@@ -261,7 +259,7 @@ fun Cell(row: Int, col: Int) {
 
 // Number Pad
 @Composable
-fun DefNums() {
+fun DialPad() {
     val rels = listOf(remember { mutableStateOf(true) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) })
     Column(
         Modifier
@@ -287,7 +285,6 @@ fun DefNums() {
 
 @Composable
 fun Dial(num: String = "", rels: List<MutableState<Boolean>>) {
-    val context = LocalContext.current
     Box(
         Modifier
             .height(60.dp)
