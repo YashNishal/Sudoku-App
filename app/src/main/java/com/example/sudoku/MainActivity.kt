@@ -3,6 +3,8 @@ package com.example.sudoku
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,25 +13,28 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.*
+import java.util.*
+import android.os.Looper
+
+
+
 
 
 class MainActivity : ComponentActivity() {
@@ -46,6 +51,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun SudokuApp() {
+    val delayController = remember { mutableStateOf<Boolean>(false) }
+
+    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+        delayController.value = !delayController.value
+    }, 500)
+
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
         BoxWithConstraints(Modifier.background(brush = Brush.linearGradient(colors = listOf(
             Color1,
