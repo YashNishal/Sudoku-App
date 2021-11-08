@@ -3,6 +3,9 @@ package com.example.sudoku
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,6 +36,8 @@ var change = "1"
 
 class PrimaryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState)
         setContent {
             App()
@@ -48,6 +53,7 @@ fun App() {
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
+            Background()
             Column {
                 BackButton()
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxSize()) {

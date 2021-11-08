@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SudokuApp() {
+fun Background() {
     val delayController = remember{ mutableStateOf(true)}
     LaunchedEffect(true) {
         stateChange(delayController)
@@ -70,63 +70,68 @@ fun SudokuApp() {
     val fc2 by animateColorAsState(targetValue = if (delayController.value) DColor3 else DColor2,  infiniteRepeatable(
         tween(5000)))
     val fc = if (isSystemInDarkTheme()) listOf(Color1, Color2) else listOf(DColor1, DColor2)
-    Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
-        BoxWithConstraints(Modifier.background(brush = Brush.linearGradient(colors = listOf(fc1, fc2)))) {
-            val width = constraints.maxWidth*1.25f
-            val height = constraints.maxHeight/2f
+    BoxWithConstraints(Modifier.background(brush = Brush.linearGradient(colors = listOf(fc1, fc2)))) {
+        val width = constraints.maxWidth*1.25f
+        val height = constraints.maxHeight/2f
 
-            // Medium colored path
-            val mediumColoredPoint1 = Offset(0f,height * 0.3f)
-            val mediumColoredPoint2 = Offset(width * 0.1f,height * 0.35f)
-            val mediumColoredPoint3 = Offset(width* 0.4f,height * 0.05f)
-            val mediumColoredPoint4 = Offset(width * 0.75f,height * 0.7f)
-            val mediumColoredPoint5 = Offset(width * 1.4f,-height )
+        // Medium colored path
+        val mediumColoredPoint1 = Offset(0f,height * 0.3f)
+        val mediumColoredPoint2 = Offset(width * 0.1f,height * 0.35f)
+        val mediumColoredPoint3 = Offset(width* 0.4f,height * 0.05f)
+        val mediumColoredPoint4 = Offset(width * 0.75f,height * 0.7f)
+        val mediumColoredPoint5 = Offset(width * 1.4f,-height )
 
-            val mediumColoredPath = Path().apply {
-                moveTo(mediumColoredPoint1.x,mediumColoredPoint1.y)
-                standardQuadFromTo(mediumColoredPoint1,mediumColoredPoint2)
-                standardQuadFromTo(mediumColoredPoint2,mediumColoredPoint3)
-                standardQuadFromTo(mediumColoredPoint3,mediumColoredPoint4)
-                standardQuadFromTo(mediumColoredPoint4,mediumColoredPoint5)
-                lineTo(width + 100f, height + 300f)
-                lineTo(-100f, height + 100f)
-                close()
-            }
+        val mediumColoredPath = Path().apply {
+            moveTo(mediumColoredPoint1.x,mediumColoredPoint1.y)
+            standardQuadFromTo(mediumColoredPoint1,mediumColoredPoint2)
+            standardQuadFromTo(mediumColoredPoint2,mediumColoredPoint3)
+            standardQuadFromTo(mediumColoredPoint3,mediumColoredPoint4)
+            standardQuadFromTo(mediumColoredPoint4,mediumColoredPoint5)
+            lineTo(width + 100f, height + 300f)
+            lineTo(-100f, height + 100f)
+            close()
+        }
 
 
-            // Light colored path
-            val lightPoint1 = Offset(0f, height * 0.35f)
-            val lightPoint2 = Offset(width * 0.1f, height * 0.4f)
-            val lightPoint3 = Offset(width * 0.3f, height * 0.35f)
-            val lightPoint4 = Offset(width * 0.65f, height)
-            val lightPoint5 = Offset(width * 1.4f, -height / 3f)
+        // Light colored path
+        val lightPoint1 = Offset(0f, height * 0.35f)
+        val lightPoint2 = Offset(width * 0.1f, height * 0.4f)
+        val lightPoint3 = Offset(width * 0.3f, height * 0.35f)
+        val lightPoint4 = Offset(width * 0.65f, height)
+        val lightPoint5 = Offset(width * 1.4f, -height / 3f)
 
-            val lightColoredPath = Path().apply {
-                moveTo(lightPoint1.x, lightPoint1.y)
-                standardQuadFromTo(lightPoint1, lightPoint2)
-                standardQuadFromTo(lightPoint2, lightPoint3)
-                standardQuadFromTo(lightPoint3, lightPoint4)
-                standardQuadFromTo(lightPoint4, lightPoint5)
-                lineTo(width + 100f, height + 100f)
-                lineTo(-100f, height + 100f)
-                close()
-            }
-            Column {
-                Spacer(modifier = Modifier.fillMaxHeight(0.65f))
-                Canvas(
-                    modifier = Modifier.fillMaxSize()) {
-                    drawPath(
-                        path = mediumColoredPath,
-                        color = Curve,
-                    )
-                    drawPath(
-                        path = lightColoredPath,
-                        color = Curve
-                    )
-                }
+        val lightColoredPath = Path().apply {
+            moveTo(lightPoint1.x, lightPoint1.y)
+            standardQuadFromTo(lightPoint1, lightPoint2)
+            standardQuadFromTo(lightPoint2, lightPoint3)
+            standardQuadFromTo(lightPoint3, lightPoint4)
+            standardQuadFromTo(lightPoint4, lightPoint5)
+            lineTo(width + 100f, height + 100f)
+            lineTo(-100f, height + 100f)
+            close()
+        }
+        Column {
+            Spacer(modifier = Modifier.fillMaxHeight(0.7f))
+            Canvas(
+                modifier = Modifier.fillMaxSize()) {
+                drawPath(
+                    path = mediumColoredPath,
+                    color = Curve,
+                )
+                drawPath(
+                    path = lightColoredPath,
+                    color = Curve
+                )
             }
         }
-        Text(text = "SUDOKU", fontSize = 50.sp, fontWeight = FontWeight.Light, color = TextWhite, letterSpacing = 1.5.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 60.dp))
+    }
+}
+
+@Composable
+fun SudokuApp() {
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
+        Background()
+        Text(text = "SUDOKU", fontSize = 50.sp, fontWeight = FontWeight.ExtraLight, color = TextWhite, letterSpacing = 1.5.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 70.dp))
         Buttons()
     }
 }
@@ -134,19 +139,23 @@ fun SudokuApp() {
 @Composable
 fun Buttons() {
     val context = LocalContext.current
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly) {
-        Spacer(modifier = Modifier.height(4.dp))
-        Button(onClick = { onClick("easy", context) }, colors = ButtonDefaults.buttonColors(Easy)) {
-            Text(text = "Easy", fontSize = 30.sp, color = TextWhite, fontWeight = FontWeight.Bold)
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.height(250.dp))
+        OutlinedButton(onClick = { onClick("easy", context) }, colors = ButtonDefaults.buttonColors(Easy)) {
+            Text(text = "EASY", fontSize = 30.sp, color = TextWhite, fontWeight = FontWeight.Bold)
         }
-        Button(onClick = { onClick("medium", context)  }, colors = ButtonDefaults.buttonColors(Orange)) {
-            Text(text = "Medium", fontSize = 30.sp, color = TextWhite)
+        Spacer(modifier = Modifier.height(50.dp))
+        Button(onClick = { onClick("medium", context)  }, colors = ButtonDefaults.buttonColors(
+            Medium)) {
+            Text(text = "MEDIUM", fontSize = 30.sp, color = TextWhite, fontWeight = FontWeight.Bold)
         }
-        Button(onClick = { onClick("hard", context)  }, colors = ButtonDefaults.buttonColors(Color.Red)) {
-            Text(text = "Hard", fontSize = 30.sp, color = TextWhite)
+        Spacer(modifier = Modifier.height(50.dp))
+        Button(onClick = { onClick("hard", context)  }, colors = ButtonDefaults.buttonColors(Hard)) {
+            Text(text = "HARD", fontSize = 30.sp, color = TextWhite, fontWeight = FontWeight.Bold)
         }
-        Button(onClick = { onClick("random", context)  }, colors = ButtonDefaults.buttonColors(Color.Magenta)) {
-            Text(text = "Random", fontSize = 30.sp, color = TextWhite)
+        Spacer(modifier = Modifier.height(50.dp))
+        Button(onClick = { onClick("random", context)  }, colors = ButtonDefaults.buttonColors(Random)) {
+            Text(text = "RANDOM", fontSize = 30.sp, color = TextWhite, fontWeight = FontWeight.Bold)
         }
     }
 }
