@@ -17,3 +17,6 @@ val Color2 = Color(0xffc3cfe2)
 
 // Button Colors
 val Easy = Color(0xB741ACFF)
+
+// Curves
+val Curve = Color(0xC4FFFFFF)
