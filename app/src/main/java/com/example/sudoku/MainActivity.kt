@@ -6,22 +6,27 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.sudoku.ui.theme.Orange
-import com.example.sudoku.ui.theme.SudokuTheme
-
+import com.example.sudoku.ui.theme.*
 
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +44,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SudokuApp() {
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
+        BoxWithConstraints(Modifier.background(brush = Brush.linearGradient(colors = listOf(
+            Color1,
+            Color2
+        )))) {
+
+        }
         Buttons()
     }
 }
@@ -48,17 +59,17 @@ fun SudokuApp() {
 fun Buttons() {
     val context = LocalContext.current
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly) {
-        Button(onClick = { onClick("easy", context) }, colors = ButtonDefaults.buttonColors(Color.Blue)) {
-            Text(text = "Easy", fontSize = 30.sp, color = Color.White)
+        Button(onClick = { onClick("easy", context) }, colors = ButtonDefaults.buttonColors(Easy)) {
+            Text(text = "Easy", fontSize = 30.sp, color = TextWhite, fontWeight = FontWeight.Bold)
         }
         Button(onClick = { onClick("medium", context)  }, colors = ButtonDefaults.buttonColors(Orange)) {
-            Text(text = "Medium", fontSize = 30.sp, color = Color.White)
+            Text(text = "Medium", fontSize = 30.sp, color = TextWhite)
         }
         Button(onClick = { onClick("hard", context)  }, colors = ButtonDefaults.buttonColors(Color.Red)) {
-            Text(text = "Hard", fontSize = 30.sp, color = Color.White)
+            Text(text = "Hard", fontSize = 30.sp, color = TextWhite)
         }
         Button(onClick = { onClick("random", context)  }, colors = ButtonDefaults.buttonColors(Color.Magenta)) {
-            Text(text = "Random", fontSize = 30.sp, color = Color.White)
+            Text(text = "Random", fontSize = 30.sp, color = TextWhite)
         }
     }
 }

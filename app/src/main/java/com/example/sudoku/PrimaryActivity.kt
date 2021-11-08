@@ -6,6 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -40,6 +42,7 @@ class PrimaryActivity : ComponentActivity() {
 
 @Composable
 fun App() {
+    val value by animateColorAsState(targetValue = Color.White, animationSpec = tween(300))
     val solution = remember{ mutableStateOf(false)}
     val correct = remember{ mutableStateOf(false)}
     SudokuTheme {
@@ -122,13 +125,13 @@ fun ValidateButton(correct: MutableState<Boolean>) {
         .clickable {
             if (check()) {
                 var noZero = true
-                for(i in 0..8)
-                    for(j in 0..8)
-                        if(matrix[i][j] == 0 ) {
+                for (i in 0..8)
+                    for (j in 0..8)
+                        if (matrix[i][j] == 0) {
                             noZero = false
                             break
                         }
-                if(noZero)
+                if (noZero)
                     correct.value = true
 
                 Toast
