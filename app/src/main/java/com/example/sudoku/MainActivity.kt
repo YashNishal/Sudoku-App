@@ -166,7 +166,7 @@ fun HeadingText() {
 fun ButtonsAndProgressBar() {
 
     // for progressBar
-    val loading = remember { mutableStateOf<Boolean>(true) }
+    val loading = remember { mutableStateOf<Boolean>(false) }
 
     val context = LocalContext.current
 
