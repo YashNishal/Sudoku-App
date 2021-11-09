@@ -37,3 +37,6 @@ val Random = Color(0xff41ACFF)
 
 // Curves
 val Curve = Color(0x7AFFFFFF)
+
+//cell color
+val CellColor = Color(0xFF88E0EF)

@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sudoku.ui.theme.BrightBlue
+import com.example.sudoku.ui.theme.CellColor
 import com.example.sudoku.ui.theme.SudokuTheme
 import com.example.sudoku.ui.theme.TextWhite
 
@@ -37,7 +38,10 @@ var change = "1"
 class PrimaryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
         super.onCreate(savedInstanceState)
         setContent {
             App()
@@ -48,20 +52,23 @@ class PrimaryActivity : ComponentActivity() {
 @Composable
 fun App() {
     val value by animateColorAsState(targetValue = Color.White, animationSpec = tween(300))
-    val solution = remember{ mutableStateOf(false)}
-    val correct = remember{ mutableStateOf(false)}
+    val solution = remember { mutableStateOf(false) }
+    val correct = remember { mutableStateOf(false) }
     SudokuTheme {
         // A surface container using the 'background' color from the theme
-        Surface(color = Color.Black,modifier = Modifier.fillMaxSize()) {
+        Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
             Background()
             Column {
                 BackButton()
-                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxSize()) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     if (solution.value) {
                         matrix = original.copy()
                         Grid()
-                    }
-                    else
+                    } else
                         Grid()
                     when {
                         correct.value -> {
@@ -80,12 +87,13 @@ fun App() {
         }
     }
 }
+
 @Composable
 fun BackButton() {
     val activity = (LocalContext.current as? Activity)
-    Box(contentAlignment = Alignment.TopStart , modifier = Modifier.fillMaxWidth()) {
+    Box(contentAlignment = Alignment.TopStart, modifier = Modifier.fillMaxWidth()) {
         Icon(painter = painterResource(id = R.drawable.ic_back),
-            contentDescription = "Back",tint = Color.White,
+            contentDescription = "Back", tint = Color.White,
             modifier = Modifier
                 .padding(15.dp)
                 .clip(RoundedCornerShape(100))
@@ -100,19 +108,22 @@ fun BackButton() {
 }
 
 
-
 @Composable
 fun FinalScreen(text: String, color: Color) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceAround) {
-        Text(text=text, fontSize = 70.sp, color = color, textAlign = TextAlign.Center)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
+        Text(text = text, fontSize = 70.sp, color = color, textAlign = TextAlign.Center)
 //        BackButton()
     }
 }
 
 @Composable
 fun MiddleButtons(solution: MutableState<Boolean>, correct: MutableState<Boolean>) {
-    Row(horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,modifier = Modifier.fillMaxWidth()
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()
     ) {
         ValidateButton(correct)
         SolveButton(solution)
@@ -149,7 +160,8 @@ fun ValidateButton(correct: MutableState<Boolean>) {
                     .show()
             }
         }) {
-        Text(text = "Validate",
+        Text(
+            text = "Validate",
             color = TextWhite,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
@@ -182,7 +194,8 @@ fun SolveButton(solution: MutableState<Boolean>) {
             Log.d("After getSolution : ", original.contentDeepToString())
             solution.value = true
         }) {
-        Text(text = "Solution",
+        Text(
+            text = "Solution",
             color = TextWhite,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
@@ -216,24 +229,24 @@ fun Grid() {
 
 
 @Composable
-fun SubGrid(i:Int) {
-    val row : Int = (i/3)*3
-    val col : Int = (i%3)*3
+fun SubGrid(i: Int) {
+    val row: Int = (i / 3) * 3
+    val col: Int = (i % 3) * 3
     Column(Modifier.padding(1.dp)) {
         Row {
             Cell(row, col)
-            Cell(row, col+1)
-            Cell(row, col+2)
+            Cell(row, col + 1)
+            Cell(row, col + 2)
         }
         Row {
-            Cell(row+1,col)
-            Cell(row+1,col+1)
-            Cell(row+1,col+2)
+            Cell(row + 1, col)
+            Cell(row + 1, col + 1)
+            Cell(row + 1, col + 2)
         }
         Row {
-            Cell(row+2,col)
-            Cell(row+2,col+1)
-            Cell(row+2,col+2)
+            Cell(row + 2, col)
+            Cell(row + 2, col + 1)
+            Cell(row + 2, col + 2)
         }
     }
 }
@@ -241,8 +254,8 @@ fun SubGrid(i:Int) {
 @Composable
 fun Cell(row: Int, col: Int) {
     val num = matrix[row][col].toString()
-    val number = remember{ mutableStateOf(if (num == "0") "" else num) }
-    val fixed = remember{ mutableStateOf(num != "0") }
+    val number = remember { mutableStateOf(if (num == "0") "" else num) }
+    val fixed = remember { mutableStateOf(num != "0") }
 
     Box(
         Modifier
@@ -252,7 +265,7 @@ fun Cell(row: Int, col: Int) {
             .clip(
                 RoundedCornerShape(2.dp)
             )
-            .background(if (fixed.value) Color.LightGray else Color.White)
+            .background(if (fixed.value) CellColor else Color.White)
             .clickable {
                 if (!fixed.value) {
                     // Color Change
@@ -261,33 +274,43 @@ fun Cell(row: Int, col: Int) {
                 }
             }
     ) {
-        Text(text = number.value, Modifier.align(Alignment.Center),
-            fontWeight = if(fixed.value)  FontWeight.ExtraBold else FontWeight.Light)
+        Text(
+            text = number.value, Modifier.align(Alignment.Center),
+            fontWeight = if (fixed.value) FontWeight.ExtraBold else FontWeight.Light
+        )
     }
 }
 
 // Number Pad
 @Composable
 fun DialPad() {
-    val rels = listOf(remember { mutableStateOf(true) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) },remember { mutableStateOf(false) })
+    val rels = listOf(remember { mutableStateOf(true) },
+        remember { mutableStateOf(false) },
+        remember { mutableStateOf(false) },
+        remember { mutableStateOf(false) },
+        remember { mutableStateOf(false) },
+        remember { mutableStateOf(false) },
+        remember { mutableStateOf(false) },
+        remember { mutableStateOf(false) },
+        remember { mutableStateOf(false) })
     Column(
         Modifier
             .padding(1.dp)
             .clickable { }) {
         Row {
-            Dial( "1", rels)
-            Dial( "2", rels)
-            Dial( "3", rels)
+            Dial("1", rels)
+            Dial("2", rels)
+            Dial("3", rels)
         }
         Row {
-            Dial( "4", rels)
-            Dial( "5", rels)
-            Dial( "6", rels)
+            Dial("4", rels)
+            Dial("5", rels)
+            Dial("6", rels)
         }
         Row {
-            Dial( "7", rels)
-            Dial( "8", rels)
-            Dial( "9", rels)
+            Dial("7", rels)
+            Dial("8", rels)
+            Dial("9", rels)
         }
     }
 }
@@ -302,7 +325,7 @@ fun Dial(num: String = "", rels: List<MutableState<Boolean>>) {
             .clip(
                 RoundedCornerShape(5.dp)
             )
-            .background(if (rels[num.toInt() - 1].value) Color.LightGray else Color.White)
+            .background(if (rels[num.toInt() - 1].value) CellColor else Color.White)
             .clickable {
                 change = num
                 disableAll(rels)
