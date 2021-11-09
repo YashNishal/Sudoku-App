@@ -166,7 +166,7 @@ fun HeadingText() {
 fun ButtonsAndProgressBar() {
 
     // for progressBar
-    val loading = remember { mutableStateOf<Boolean>(false) }
+    val loading = remember { mutableStateOf<Boolean>(true) }
 
     val context = LocalContext.current
 
@@ -215,23 +215,8 @@ fun ButtonsAndProgressBar() {
             Text(text = "RANDOM", fontSize = 24.sp, color = TextWhite, fontWeight = FontWeight.Bold)
         }
         Spacer(modifier = Modifier.height(70.dp))
-        CircularProgressBar(loading)
-    }
-}
-
-
-@Composable
-fun CircularProgressBar(isVisible : MutableState<Boolean>) {
-    if(isVisible.value) {
-        Row(horizontalArrangement = Arrangement.Center ,
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-        )
-        {
+        if(loading.value)
             CircularProgressIndicator(color = Color.White)
-        }
     }
 }
 
