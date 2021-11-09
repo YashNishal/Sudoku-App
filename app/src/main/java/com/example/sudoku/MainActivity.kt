@@ -227,7 +227,6 @@ fun ButtonsAndProgressBar() {
 
 
 fun onClick(difficulty: String, context: Context,loading : MutableState<Boolean>) {
-    change = "1"
     getData(difficulty, context,loading)
 }
 
@@ -253,8 +252,6 @@ fun getData(difficulty: String, context: Context,loading : MutableState<Boolean>
 
 
 fun initialiseMatrix(response: String, context: Context,loading : MutableState<Boolean>) {
-    Log.d("string : ", response)
-
     var k = 11
     var row = 0
     var col = 0
@@ -273,15 +270,8 @@ fun initialiseMatrix(response: String, context: Context,loading : MutableState<B
         col++
         k += 2
     }
-
-    for (i in 0..8) {
-        for (j in 0..8) {
-            Log.d("  i = $i  j = $j : value = ", "${matrix[i][j]}")
-        }
-    }
     loading.value = false
     startActivity(context, Intent(context, PrimaryActivity::class.java), null)
-    Log.e("matrix :", " initialised")
 }
 
 @Preview(showBackground = true)

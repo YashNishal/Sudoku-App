@@ -3,6 +3,7 @@ package com.example.sudoku
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
@@ -25,4 +26,15 @@ suspend fun stateChange(c: MutableState<Boolean>) {
         c.value = !c.value
         delay(4000)
     }
+}
+
+
+fun initializeToasty() {
+    Toasty.Config.getInstance()
+//        .tintIcon(boolean tintIcon) // optional (apply textColor also to the icon)
+//        .setTextSize(int sizeInSp) // optional
+        .allowQueue( true) // optional (prevents several Toastys from queuing)
+        .supportDarkTheme(true) // optional (whether to support dark theme or not)
+//        .setRTL(boolean isRTL) // optional (icon is on the right)
+        .apply(); // required
 }

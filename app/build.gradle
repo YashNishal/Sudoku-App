@@ -64,6 +64,8 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     implementation"com.android.volley:volley:1.2.1"
-    implementation 'com.google.code.gson:gson:2.8.9'
     implementation"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
+
+    //for better toast
+    implementation 'com.github.GrenderG:Toasty:1.5.2'
 }
