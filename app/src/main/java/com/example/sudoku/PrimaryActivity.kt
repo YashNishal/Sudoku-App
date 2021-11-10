@@ -257,7 +257,7 @@ fun CheckButton(correct: MutableState<Boolean>) {
         modifier = Modifier
             .padding(15.dp)
 
-            .background(Color.White)
+            .background(CellNormalColor)
             .clickable {
                 if (check()) {
                     var noZero = true
@@ -309,7 +309,7 @@ fun EraseButton() {
         modifier = Modifier
             .padding(15.dp)
 
-            .background(Color.White)
+            .background(CellNormalColor)
             .clickable {
                 change = "0"
             }
@@ -400,7 +400,7 @@ fun FinalScreen(text: String, color: Color = TextWhite) {
             fontSize = 50.sp,
             color = color,
             fontWeight = FontWeight.Light,
-            letterSpacing = 5.sp,
+            letterSpacing = 10.sp,
             textAlign = TextAlign.Center
         )
         BackButton(60)

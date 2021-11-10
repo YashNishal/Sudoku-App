@@ -15,12 +15,11 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -190,6 +189,7 @@ fun HeadingText() {
 fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
     // for progressBar
     val context = LocalContext.current
+    val interSource = remember { MutableInteractionSource() }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(250.dp))
@@ -210,6 +210,7 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
             letterSpacing = 5.sp,
             fontWeight = FontWeight.Light,
             modifier = Modifier
+                .indication(indication = null, interactionSource = interSource)
                 .padding(4.dp)
                 .clickable { onClick("medium", context, loading) }
         )
