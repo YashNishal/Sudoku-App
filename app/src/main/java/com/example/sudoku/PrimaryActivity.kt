@@ -109,7 +109,7 @@ fun TopBar(solution: MutableState<Boolean>) {
                 .size(30.dp)
                 .clickable {
                     activity?.finish()
-                    customType(context,"fadein-to-fadeout")
+                    customType(context, "fadein-to-fadeout")
                 }
         )
         SolutionButton(solution)
@@ -123,9 +123,10 @@ fun SolutionButton(solution: MutableState<Boolean>) {
 
     Text(
         text = "SOLUTION",
-        fontSize = 22.sp,
+        fontSize = 25.sp,
         color = TextWhite,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Light,
+        letterSpacing = 5.sp,
         modifier = Modifier
             .padding(15.dp)
             .clickable {
@@ -204,9 +205,9 @@ fun Cell(row: Int, col: Int) {
             .height(40.dp)
             .width(40.dp)
             .padding(0.75.dp)
-            .clip(
-                RoundedCornerShape(2.dp)
-            )
+//            .clip(
+//                RoundedCornerShape(2.dp)
+//            )
             .background(if (fixed.value) CellColor else Color.White)
             .clickable {
                 if (!fixed.value) {
@@ -219,7 +220,8 @@ fun Cell(row: Int, col: Int) {
         Text(
             text = if (number.value == "0") "" else number.value,
             Modifier.align(Alignment.Center),
-            fontWeight = if (fixed.value) FontWeight.ExtraBold else FontWeight.Light
+            fontSize = 24.sp,
+            fontWeight = if (fixed.value) FontWeight.Normal else FontWeight.Light
         )
     }
 }
@@ -243,53 +245,72 @@ fun MiddleButtons(correct: MutableState<Boolean>) {
 @Composable
 fun CheckButton(correct: MutableState<Boolean>) {
     val context = LocalContext.current
-    Text(
+    Text(modifier = Modifier
+        .padding(15.dp)
+
+        .background(Color.White)
+        .clickable {
+            if (check()) {
+                var noZero = true
+                for (i in 0..8)
+                    for (j in 0..8)
+                        if (matrix[i][j] == 0) {
+                            noZero = false
+                            break
+                        }
+                if (noZero)
+                    correct.value = true
+
+                Toasty
+                    .success(context, "Correct!", Toast.LENGTH_SHORT, true)
+                    .show()
+            } else
+                Toasty
+                    .error(context, "Incorrect.", Toast.LENGTH_SHORT, true)
+                    .show()
+        }
+        .padding(6.dp),
         text = "CHECK",
         fontSize = 22.sp,
-        color = TextWhite,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier
-            .padding(15.dp)
-            .clickable {
-                if (check()) {
-                    var noZero = true
-                    for (i in 0..8)
-                        for (j in 0..8)
-                            if (matrix[i][j] == 0) {
-                                noZero = false
-                                break
-                            }
-                    if (noZero)
-                        correct.value = true
+        color = Color.Black,
+        fontWeight = FontWeight.Light,
+        letterSpacing = 5.sp,
 
-                    Toasty
-                        .success(context, "Correct!", Toast.LENGTH_SHORT, true)
-                        .show()
-                } else
-                    Toasty
-                        .error(context, "Incorrect.", Toast.LENGTH_SHORT, true)
-                        .show()
-            }
     )
 }
 
 
 @Composable
 fun EraseButton() {
-    Box(
-        modifier = Modifier.padding(15.dp),
-        // for other style
-    ) {
-        Icon(painter = painterResource(id = R.drawable.ic_icons8_erase_6),
-            contentDescription = "Erase",
-            tint = Color.White,
-            modifier = Modifier
-                .clickable {
-                    change = "0"
-                }
-                .size(40.dp)
+//    Box(
+//        modifier = Modifier.padding(15.dp),
+//        // for other style
+//    ) {
+//        Icon(painter = painterResource(id = R.drawable.ic_icons8_erase_5),
+//            contentDescription = "Erase",
+//            tint = Color.White,
+//            modifier = Modifier
+//                .clickable {
+//                    change = "0"
+//                }
+//                .size(40.dp)
+//        )
+//    }
+    Text(modifier = Modifier
+        .padding(15.dp)
+
+        .background(Color.White)
+        .clickable {
+            change = "0"
+        }
+        .padding(6.dp),
+        text = "ERASE",
+        fontSize = 22.sp,
+        color = Color.Black,
+        fontWeight = FontWeight.Light,
+        letterSpacing = 5.sp,
+
         )
-    }
 }
 
 
@@ -336,9 +357,7 @@ fun Dial(num: String = "", rels: List<MutableState<Boolean>>) {
             .height(60.dp)
             .width(60.dp)
             .padding(2.dp)
-            .clip(
-                RoundedCornerShape(5.dp)
-            )
+
             .background(if (rels[num.toInt() - 1].value) CellColor else Color.White)
             .clickable {
                 change = num
@@ -348,9 +367,9 @@ fun Dial(num: String = "", rels: List<MutableState<Boolean>>) {
         Text(text = num,
             Modifier
                 .align(Alignment.Center),
-            fontSize = 22.sp,
+            fontSize = 26.sp,
             color = Color.Black,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Normal
         )
     }
 }
