@@ -3,7 +3,6 @@ package com.example.sudoku
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.WindowManager
