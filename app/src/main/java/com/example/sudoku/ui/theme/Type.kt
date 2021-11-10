@@ -11,10 +11,19 @@ import androidx.core.content.res.ResourcesCompat
 import com.example.sudoku.R
 import kotlin.coroutines.coroutineContext
 
+
+val fonts = FontFamily (
+    Font(R.font.source_sans_pro, weight = FontWeight.Normal),
+    Font(R.font.source_sans_pro_bold, weight = FontWeight.Bold),
+    Font(R.font.source_sans_pro_extralight, weight = FontWeight.ExtraLight),
+    Font(R.font.source_sans_pro_light, weight = FontWeight.Light),
+    Font(R.font.source_sans_pro_black, weight = FontWeight.Black)
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     body1 = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = fonts,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     )
@@ -30,7 +39,4 @@ val Typography = Typography(
         fontSize = 12.sp
     )
     */
-)
-
-val fonts = FontFamily(
 )

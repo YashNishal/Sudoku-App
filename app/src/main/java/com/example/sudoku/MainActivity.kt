@@ -167,7 +167,7 @@ fun HeadingText() {
         fontSize = 70.sp,
         fontWeight = FontWeight.ExtraLight,
         color = TextWhite,
-        letterSpacing = 1.5.sp,
+        letterSpacing = 10.sp,
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(top = 70.dp)
     )
@@ -187,7 +187,8 @@ fun ButtonsAndProgressBar() {
             text = "EASY",
             fontSize = 24.sp,
             color = TextWhite,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Light,
+            letterSpacing = 5.sp,
             modifier = Modifier
                 .padding(4.dp)
                 .clickable { onClick("easy", context, loading) }
@@ -197,7 +198,8 @@ fun ButtonsAndProgressBar() {
             text = "MEDIUM",
             fontSize = 24.sp,
             color = TextWhite,
-            fontWeight = FontWeight.Bold,
+            letterSpacing = 5.sp,
+            fontWeight = FontWeight.Light,
             modifier = Modifier
                 .padding(4.dp)
                 .clickable { onClick("medium", context, loading) }
@@ -207,7 +209,8 @@ fun ButtonsAndProgressBar() {
             text = "HARD",
             fontSize = 24.sp,
             color = TextWhite,
-            fontWeight = FontWeight.Bold,
+            letterSpacing = 5.sp,
+            fontWeight = FontWeight.Light,
             modifier = Modifier
                 .padding(4.dp)
                 .clickable { onClick("hard", context, loading) }
@@ -217,7 +220,8 @@ fun ButtonsAndProgressBar() {
             text = "RANDOM",
             fontSize = 24.sp,
             color = TextWhite,
-            fontWeight = FontWeight.Bold,
+            letterSpacing = 5.sp,
+            fontWeight = FontWeight.Light,
             modifier = Modifier
                 .padding(4.dp)
                 .clickable { onClick("random", context, loading) }
