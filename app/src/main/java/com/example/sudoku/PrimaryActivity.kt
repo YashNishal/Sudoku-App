@@ -47,7 +47,9 @@ class PrimaryActivity : ComponentActivity() {
         initializeToasty()
         super.onCreate(savedInstanceState)
         setContent {
-            App()
+            val solution = remember { mutableStateOf(false) }
+            val correct = remember { mutableStateOf(false) }
+            App(solution,correct)
         }
     }
 }
@@ -58,9 +60,7 @@ class PrimaryActivity : ComponentActivity() {
 
 @ExperimentalComposeUiApi
 @Composable
-fun App() {
-    val solution = remember { mutableStateOf(false) }
-    val correct = remember { mutableStateOf(false) }
+fun App(solution : MutableState<Boolean>,correct: MutableState<Boolean>) {
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
@@ -80,14 +80,24 @@ fun App() {
                         Grid()
                     when {
                         correct.value -> {
-                            FinalScreen(text = "VICTORY!")
+                            Box {
+                                FinalScreen(text = "VICTORY!")
+                            }
                         }
                         solution.value -> {
-                            FinalScreen(text = "TRY AGAIN")
+                            Box {
+                                FinalScreen(text = "TRY AGAIN")
+                            }
                         }
                         else -> {
-                            MiddleButtons(correct)
-                            DialPad()
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.SpaceAround,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                MiddleButtons(correct)
+                                DialPad()
+                            }
                         }
                     }
                 }
@@ -433,40 +443,7 @@ fun disableAll(dialStateList: List<MutableState<Boolean>>) {
 fun PrimaryScreen() {
     val solution = remember { mutableStateOf(false) }
     val correct = remember { mutableStateOf(false) }
-    SudokuTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
-            Background(mutableStateOf(true))
-            Column {
-                Spacer(modifier = Modifier.padding(12.dp))
-                TopBar(solution)
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    if (solution.value) {
-                        matrix = original.copy()
-                        Grid()
-                    } else
-                        Grid()
-                    when {
-                        correct.value -> {
-                            FinalScreen(text = "VICTORY!", color = TextWhite)
-
-                        }
-                        solution.value -> {
-                            FinalScreen(text = "TRY AGAIN", color = TextWhite)
-                        }
-                        else -> {
-                            MiddleButtons(correct)
-                            DialPad()
-                        }
-                    }
-                }
-            }
-        }
-    }
+    App(solution,correct)
 }
 
 
@@ -476,40 +453,7 @@ fun PrimaryScreen() {
 fun TryAgainScreen() {
     val solution = remember { mutableStateOf(true) }
     val correct = remember { mutableStateOf(false) }
-    SudokuTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
-            Background(mutableStateOf(true))
-            Column {
-                Spacer(modifier = Modifier.padding(12.dp))
-                TopBar(solution)
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    if (solution.value) {
-                        matrix = original.copy()
-                        Grid()
-                    } else
-                        Grid()
-                    when {
-                        correct.value -> {
-                            FinalScreen(text = "VICTORY!", color = TextWhite)
-
-                        }
-                        solution.value -> {
-                            FinalScreen(text = "TRY AGAIN", color = TextWhite)
-                        }
-                        else -> {
-                            MiddleButtons(correct)
-                            DialPad()
-                        }
-                    }
-                }
-            }
-        }
-    }
+    App(solution,correct)
 }
 
 
@@ -517,40 +461,7 @@ fun TryAgainScreen() {
 @Preview(showBackground = true)
 @Composable
 fun VictoryScreen() {
-    val solution = remember { mutableStateOf(true) }
+    val solution = remember { mutableStateOf(false) }
     val correct = remember { mutableStateOf(true) }
-    SudokuTheme {
-        // A surface container using the 'background' color from the theme
-        Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
-            Background(mutableStateOf(true))
-            Column {
-                Spacer(modifier = Modifier.padding(12.dp))
-                TopBar(solution)
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    if (solution.value) {
-                        matrix = original.copy()
-                        Grid()
-                    } else
-                        Grid()
-                    when {
-                        correct.value -> {
-                            FinalScreen(text = "VICTORY!", color = TextWhite)
-
-                        }
-                        solution.value -> {
-                            FinalScreen(text = "TRY AGAIN", color = TextWhite)
-                        }
-                        else -> {
-                            MiddleButtons(correct)
-                            DialPad()
-                        }
-                    }
-                }
-            }
-        }
-    }
+    App(solution,correct)
 }
