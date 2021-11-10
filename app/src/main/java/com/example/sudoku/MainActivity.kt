@@ -2,16 +2,13 @@ package com.example.sudoku
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
@@ -19,7 +16,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +32,6 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,6 +41,8 @@ import maes.tech.intentanim.CustomIntent.customType
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        @Suppress("DEPRECATION")
         window.apply {
             clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -102,7 +99,6 @@ fun Background(loading: MutableState<Boolean>) {
             tween(5000)
         )
     )
-    val fc = if (isSystemInDarkTheme()) listOf(Color1, Color2) else listOf(DColor1, DColor2)
     BoxWithConstraints(
         Modifier.background(
             brush = Brush.linearGradient(
@@ -195,7 +191,7 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
         Spacer(modifier = Modifier.height(250.dp))
         Text(modifier = Modifier
             .padding(4.dp)
-            .clickable() { onClick("easy", context, loading) },
+            .clickable { onClick("easy", context, loading) },
             text = "EASY",
             fontSize = 24.sp,
             color = TextWhite,
@@ -289,7 +285,7 @@ fun initialiseMatrix(response: String, context: Context, loading: MutableState<B
         col++
         k += 2
     }
-    GlobalScope.launch(Dispatchers.Default) {
+    GlobalScope.launch {
         delay(1200)
         loading.value = false
     }

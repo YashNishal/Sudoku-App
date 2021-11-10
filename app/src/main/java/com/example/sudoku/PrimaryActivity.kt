@@ -31,6 +31,8 @@ var change = "0"
 
 class PrimaryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        @Suppress("DEPRECATION")
         window.apply {
             clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -117,7 +119,7 @@ fun BackButton(size: Int) {
         tint = Color.White,
         modifier = Modifier
             .padding(15.dp)
-            .size(30.dp)
+            .size(size.dp)
             .clickable {
                 activity?.finish()
                 customType(context, "fadein-to-fadeout")
@@ -142,7 +144,7 @@ fun SolutionButton(solution: MutableState<Boolean>) {
                 if (!getSolution()) {
                     Toasty
                         .error(context, "Unable to get Solution", Toast.LENGTH_SHORT, true)
-                        .show();
+                        .show()
                 }
                 Log.d("After getSolution : ", original.contentDeepToString())
                 solution.value = true
@@ -328,7 +330,7 @@ fun EraseButton() {
 // DIAL PAD
 @Composable
 fun DialPad() {
-    val rels = listOf(remember { mutableStateOf(false) },
+    val dialStateList = listOf(remember { mutableStateOf(false) },
         remember { mutableStateOf(false) },
         remember { mutableStateOf(false) },
         remember { mutableStateOf(false) },
@@ -342,37 +344,37 @@ fun DialPad() {
             .padding(1.dp)
             .clickable { }) {
         Row {
-            Dial("1", rels)
-            Dial("2", rels)
-            Dial("3", rels)
+            Dial("1", dialStateList)
+            Dial("2", dialStateList)
+            Dial("3", dialStateList)
         }
         Row {
-            Dial("4", rels)
-            Dial("5", rels)
-            Dial("6", rels)
+            Dial("4", dialStateList)
+            Dial("5", dialStateList)
+            Dial("6", dialStateList)
         }
         Row {
-            Dial("7", rels)
-            Dial("8", rels)
-            Dial("9", rels)
+            Dial("7", dialStateList)
+            Dial("8", dialStateList)
+            Dial("9", dialStateList)
         }
     }
 }
 
 
 @Composable
-fun Dial(num: String = "", rels: List<MutableState<Boolean>>) {
+fun Dial(num: String = "", dialStateList: List<MutableState<Boolean>>) {
     Box(
         Modifier
             .height(60.dp)
             .width(60.dp)
             .padding(2.dp)
 
-            .background(if (rels[num.toInt() - 1].value) CellHighlightColor else CellNormalColor)
+            .background(if (dialStateList[num.toInt() - 1].value) CellHighlightColor else CellNormalColor)
             .clickable {
                 change = num
-                disableAll(rels)
-                rels[num.toInt() - 1].value = true
+                disableAll(dialStateList)
+                dialStateList[num.toInt() - 1].value = true
             }) {
         Text(
             text = num,
@@ -411,9 +413,9 @@ fun FinalScreen(text: String, color: Color = TextWhite) {
 /* ---------------------------------------------------------------------- */
 // HELPER FUNCTIONS
 
-fun disableAll(rels: List<MutableState<Boolean>>) {
+fun disableAll(dialStateList: List<MutableState<Boolean>>) {
     for (i in 0..8) {
-        rels[i].value = false
+        dialStateList[i].value = false
     }
 }
 
