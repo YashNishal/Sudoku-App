@@ -3,6 +3,8 @@ package com.example.sudoku
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
+import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -14,8 +16,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +33,7 @@ import maes.tech.intentanim.CustomIntent.customType
 
 var change = "0"
 
+@ExperimentalComposeUiApi
 class PrimaryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -55,6 +60,7 @@ class PrimaryActivity : ComponentActivity() {
 /* ---------------------MAIN APP----------------------- */
 
 
+@ExperimentalComposeUiApi
 @Composable
 fun App() {
     val solution = remember { mutableStateOf(false) }
@@ -98,6 +104,7 @@ fun App() {
 // COMPOSABLE FUNCTIONS
 
 
+@ExperimentalComposeUiApi
 @Composable
 fun TopBar(solution: MutableState<Boolean>) {
     Row(
@@ -109,6 +116,7 @@ fun TopBar(solution: MutableState<Boolean>) {
     }
 }
 
+@ExperimentalComposeUiApi
 @Composable
 fun BackButton(size: Int) {
     val context = LocalContext.current
@@ -120,9 +128,12 @@ fun BackButton(size: Int) {
         modifier = Modifier
             .padding(15.dp)
             .size(size.dp)
-            .clickable {
-                activity?.finish()
-                customType(context, "fadein-to-fadeout")
+            .pointerInteropFilter {
+                if (it.action == ACTION_UP) {
+                    activity?.finish()
+                    customType(context, "fadein-to-fadeout")
+                }
+                true
             }
     )
 }
@@ -391,6 +402,7 @@ fun Dial(num: String = "", dialStateList: List<MutableState<Boolean>>) {
 /* ---------------------- */
 // FINAL SCREEN
 
+@ExperimentalComposeUiApi
 @Composable
 fun FinalScreen(text: String, color: Color = TextWhite) {
     Column(
@@ -419,6 +431,7 @@ fun disableAll(dialStateList: List<MutableState<Boolean>>) {
     }
 }
 
+@ExperimentalComposeUiApi
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview2() {

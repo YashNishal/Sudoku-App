@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
@@ -13,14 +14,15 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,12 +34,15 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.*
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import maes.tech.intentanim.CustomIntent.customType
 
 
+@DelicateCoroutinesApi
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +63,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
+@DelicateCoroutinesApi
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Composable
 fun SudokuApp() {
@@ -180,18 +186,23 @@ fun HeadingText() {
     )
 }
 
-
+@DelicateCoroutinesApi
+@ExperimentalComposeUiApi
 @Composable
 fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
     // for progressBar
     val context = LocalContext.current
-    val interSource = remember { MutableInteractionSource() }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(250.dp))
         Text(modifier = Modifier
             .padding(4.dp)
-            .clickable { onClick("easy", context, loading) },
+            .pointerInteropFilter {
+                if (it.action == ACTION_UP) {
+                    onClick("easy", context, loading)
+                }
+                true
+            },
             text = "EASY",
             fontSize = 24.sp,
             color = TextWhite,
@@ -206,9 +217,13 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
             letterSpacing = 5.sp,
             fontWeight = FontWeight.Light,
             modifier = Modifier
-                .indication(indication = null, interactionSource = interSource)
                 .padding(4.dp)
-                .clickable { onClick("medium", context, loading) }
+                .pointerInteropFilter {
+                    if (it.action == ACTION_UP) {
+                        onClick("medium", context, loading)
+                    }
+                    true
+                }
         )
         Spacer(modifier = Modifier.height(50.dp))
         Text(
@@ -219,7 +234,12 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
             fontWeight = FontWeight.Light,
             modifier = Modifier
                 .padding(4.dp)
-                .clickable { onClick("hard", context, loading) }
+                .pointerInteropFilter {
+                    if (it.action == ACTION_UP) {
+                        onClick("hard", context, loading)
+                    }
+                    true
+                }
         )
         Spacer(modifier = Modifier.height(50.dp))
         Text(
@@ -230,7 +250,12 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
             fontWeight = FontWeight.Light,
             modifier = Modifier
                 .padding(4.dp)
-                .clickable { onClick("random", context, loading) }
+                .pointerInteropFilter {
+                    if (it.action == ACTION_UP) {
+                        onClick("random", context, loading)
+                    }
+                    true
+                }
         )
         Spacer(modifier = Modifier.height(70.dp))
         if (loading.value)
@@ -240,12 +265,14 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
 
 
 // OTHER HELPER FUNCTIONS
-
+@ExperimentalComposeUiApi
+@DelicateCoroutinesApi
 fun onClick(difficulty: String, context: Context, loading: MutableState<Boolean>) {
     getData(difficulty, context, loading)
 }
 
-
+@ExperimentalComposeUiApi
+@DelicateCoroutinesApi
 fun getData(difficulty: String, context: Context, loading: MutableState<Boolean>) {
     val queue = Volley.newRequestQueue(context)
     val url = "https://sugoku.herokuapp.com/board?difficulty=${difficulty}"
@@ -266,6 +293,8 @@ fun getData(difficulty: String, context: Context, loading: MutableState<Boolean>
 }
 
 
+@ExperimentalComposeUiApi
+@DelicateCoroutinesApi
 fun initialiseMatrix(response: String, context: Context, loading: MutableState<Boolean>) {
     var k = 11
     var row = 0
@@ -293,6 +322,8 @@ fun initialiseMatrix(response: String, context: Context, loading: MutableState<B
     customType(context, "fadein-to-fadeout")
 }
 
+@DelicateCoroutinesApi
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
