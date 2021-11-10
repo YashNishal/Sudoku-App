@@ -63,9 +63,13 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
+    //for api calls
     implementation"com.android.volley:volley:1.2.1"
     implementation"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
 
     //for better toast
     implementation 'com.github.GrenderG:Toasty:1.5.2'
+
+    //for transitions
+    implementation 'com.github.hajiyevelnur92:intentanimation:1.0'
 }

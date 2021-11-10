@@ -28,7 +28,6 @@ suspend fun stateChange(c: MutableState<Boolean>) {
     }
 }
 
-
 fun initializeToasty() {
     Toasty.Config.getInstance()
 //        .tintIcon(boolean tintIcon) // optional (apply textColor also to the icon)

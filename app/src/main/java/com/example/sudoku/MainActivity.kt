@@ -8,11 +8,12 @@ import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.*
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -32,8 +33,11 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.*
+import kotlinx.coroutines.delay
+import maes.tech.intentanim.CustomIntent.customType
 
 
+@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         window.apply {
@@ -52,12 +56,20 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@ExperimentalAnimationApi
 @Composable
 fun SudokuApp() {
+    var visible by remember{ mutableStateOf(false) }
+    LaunchedEffect(true) {
+        delay(200)
+        visible = true
+    }
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
         Background()
-        HeadingText()
-        ButtonsAndProgressBar()
+        AnimatedVisibility(modifier = Modifier.fillMaxSize(), visible = visible, enter = fadeIn(animationSpec = tween(1500))) {
+            HeadingText()
+            ButtonsAndProgressBar()
+        }
     }
 }
 
@@ -164,56 +176,52 @@ fun HeadingText() {
 
 @Composable
 fun ButtonsAndProgressBar() {
-
     // for progressBar
-    val loading = remember { mutableStateOf<Boolean>(false) }
+    val loading = remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(250.dp))
-        Button(
-            onClick = { onClick("easy", context,loading) },
-            colors = ButtonDefaults.buttonColors(Easy)
-        ) {
-            Text(
-                text = "EASY",
-                fontSize = 24.sp,
-                color = TextWhite,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(4.dp)
-            )
-        }
+        Text(
+            text = "EASY",
+            fontSize = 24.sp,
+            color = TextWhite,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(4.dp)
+                .clickable { onClick("easy", context, loading) }
+        )
         Spacer(modifier = Modifier.height(50.dp))
-        Button(
-            onClick = { onClick("medium", context,loading) }, colors = ButtonDefaults.buttonColors(
-                Medium
-            )
-        ) {
-            Text(
-                text = "MEDIUM",
-                fontSize = 24.sp,
-                color = TextWhite,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(4.dp)
-            )
-        }
+        Text(
+            text = "MEDIUM",
+            fontSize = 24.sp,
+            color = TextWhite,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(4.dp)
+                .clickable { onClick("medium", context, loading) }
+        )
         Spacer(modifier = Modifier.height(50.dp))
-        Button(
-            onClick = { onClick("hard", context,loading) },
-            colors = ButtonDefaults.buttonColors(Hard),
-            modifier = Modifier.padding(4.dp)
-        ) {
-            Text(text = "HARD", fontSize = 24.sp, color = TextWhite, fontWeight = FontWeight.Bold)
-        }
+        Text(
+            text = "HARD",
+            fontSize = 24.sp,
+            color = TextWhite,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(4.dp)
+                .clickable { onClick("hard", context, loading) }
+        )
         Spacer(modifier = Modifier.height(50.dp))
-        Button(
-            onClick = { onClick("random", context,loading) },
-            colors = ButtonDefaults.buttonColors(Random),
-            modifier = Modifier.padding(4.dp)
-        ) {
-            Text(text = "RANDOM", fontSize = 24.sp, color = TextWhite, fontWeight = FontWeight.Bold)
-        }
+        Text(
+            text = "RANDOM",
+            fontSize = 24.sp,
+            color = TextWhite,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(4.dp)
+                .clickable { onClick("random", context, loading) }
+        )
         Spacer(modifier = Modifier.height(70.dp))
         if(loading.value)
             CircularProgressIndicator(color = Color.White)
@@ -223,7 +231,6 @@ fun ButtonsAndProgressBar() {
 
 
 // OTHER HELPER FUNCTIONS
-
 
 
 fun onClick(difficulty: String, context: Context,loading : MutableState<Boolean>) {
@@ -272,8 +279,10 @@ fun initialiseMatrix(response: String, context: Context,loading : MutableState<B
     }
     loading.value = false
     startActivity(context, Intent(context, PrimaryActivity::class.java), null)
+    customType(context,"fadein-to-fadeout")
 }
 
+@ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {

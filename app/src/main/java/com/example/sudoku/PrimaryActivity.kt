@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sudoku.ui.theme.*
 import es.dmoral.toasty.Toasty
+import maes.tech.intentanim.CustomIntent.customType
 
 var change = "0"
 
@@ -53,7 +54,6 @@ class PrimaryActivity : ComponentActivity() {
 
 @Composable
 fun App() {
-    val value by animateColorAsState(targetValue = Color.White, animationSpec = tween(300))
     val solution = remember { mutableStateOf(false) }
     val correct = remember { mutableStateOf(false) }
     SudokuTheme {
@@ -96,7 +96,8 @@ fun App() {
 
 @Composable
 fun TopBar(solution: MutableState<Boolean>) {
-    val activity = (LocalContext.current as? Activity)
+    val context = LocalContext.current
+    val activity = (context as? Activity)
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
@@ -110,6 +111,7 @@ fun TopBar(solution: MutableState<Boolean>) {
                 .size(30.dp)
                 .clickable {
                     activity?.finish()
+                    customType(context,"fadein-to-fadeout")
                 }
         )
         SolutionButton(solution)
