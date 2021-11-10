@@ -44,9 +44,6 @@ class PrimaryActivity : ComponentActivity() {
             statusBarColor = resources.getColor(R.color.transparent)
         }
 
-
-
-
         initializeToasty()
         super.onCreate(savedInstanceState)
         setContent {
@@ -433,9 +430,95 @@ fun disableAll(dialStateList: List<MutableState<Boolean>>) {
 @ExperimentalComposeUiApi
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview2() {
+fun PrimaryScreen() {
+    val solution = remember { mutableStateOf(false) }
+    val correct = remember { mutableStateOf(false) }
+    SudokuTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
+            Background(mutableStateOf(true))
+            Column {
+                Spacer(modifier = Modifier.padding(12.dp))
+                TopBar(solution)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (solution.value) {
+                        matrix = original.copy()
+                        Grid()
+                    } else
+                        Grid()
+                    when {
+                        correct.value -> {
+                            FinalScreen(text = "VICTORY!", color = TextWhite)
+
+                        }
+                        solution.value -> {
+                            FinalScreen(text = "TRY AGAIN", color = TextWhite)
+                        }
+                        else -> {
+                            MiddleButtons(correct)
+                            DialPad()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@ExperimentalComposeUiApi
+@Preview(showBackground = true)
+@Composable
+fun TryAgainScreen() {
     val solution = remember { mutableStateOf(true) }
     val correct = remember { mutableStateOf(false) }
+    SudokuTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
+            Background(mutableStateOf(true))
+            Column {
+                Spacer(modifier = Modifier.padding(12.dp))
+                TopBar(solution)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (solution.value) {
+                        matrix = original.copy()
+                        Grid()
+                    } else
+                        Grid()
+                    when {
+                        correct.value -> {
+                            FinalScreen(text = "VICTORY!", color = TextWhite)
+
+                        }
+                        solution.value -> {
+                            FinalScreen(text = "TRY AGAIN", color = TextWhite)
+                        }
+                        else -> {
+                            MiddleButtons(correct)
+                            DialPad()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@ExperimentalComposeUiApi
+@Preview(showBackground = true)
+@Composable
+fun VictoryScreen() {
+    val solution = remember { mutableStateOf(true) }
+    val correct = remember { mutableStateOf(true) }
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
