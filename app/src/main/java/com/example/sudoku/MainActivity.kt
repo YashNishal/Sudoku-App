@@ -2,9 +2,11 @@ package com.example.sudoku
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -191,15 +193,14 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(250.dp))
-        Text(
+        Text(modifier = Modifier
+            .padding(4.dp)
+            .clickable() { onClick("easy", context, loading) },
             text = "EASY",
             fontSize = 24.sp,
             color = TextWhite,
             fontWeight = FontWeight.Light,
-            letterSpacing = 5.sp,
-            modifier = Modifier
-                .padding(4.dp)
-                .clickable { onClick("easy", context, loading) }
+            letterSpacing = 5.sp
         )
         Spacer(modifier = Modifier.height(50.dp))
         Text(

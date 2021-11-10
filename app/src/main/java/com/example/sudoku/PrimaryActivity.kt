@@ -3,7 +3,7 @@ package com.example.sudoku
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import android.view.Window
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -11,12 +11,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -33,11 +31,16 @@ var change = "0"
 
 class PrimaryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        window.apply {
+            clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            statusBarColor = resources.getColor(R.color.transparent)
+        }
+
+
+
+
         initializeToasty()
         super.onCreate(savedInstanceState)
         setContent {
@@ -59,6 +62,7 @@ fun App() {
         Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
             Background(mutableStateOf(true))
             Column {
+                Spacer(modifier = Modifier.padding(12.dp))
                 TopBar(solution)
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,10 +76,10 @@ fun App() {
                         Grid()
                     when {
                         correct.value -> {
-                            FinalScreen(text = "Victory!", color = Color.Green)
+                            FinalScreen(text = "VICTORY!")
                         }
                         solution.value -> {
-                            FinalScreen(text = "GAME OVER!", color = Color.Red)
+                            FinalScreen(text = "TRY AGAIN")
                         }
                         else -> {
                             MiddleButtons(correct)
@@ -94,28 +98,32 @@ fun App() {
 
 @Composable
 fun TopBar(solution: MutableState<Boolean>) {
-    val context = LocalContext.current
-    val activity = (context as? Activity)
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_baseline_arrow_back_ios_24),
-            contentDescription = "Back",
-            tint = Color.White,
-            modifier = Modifier
-                .padding(15.dp)
-                .size(30.dp)
-                .clickable {
-                    activity?.finish()
-                    customType(context, "fadein-to-fadeout")
-                }
-        )
+        BackButton(30)
         SolutionButton(solution)
     }
 }
 
+@Composable
+fun BackButton(size: Int) {
+    val context = LocalContext.current
+    val activity = (context as? Activity)
+    Icon(
+        painter = painterResource(id = R.drawable.ic_baseline_arrow_back_ios_24),
+        contentDescription = "Back",
+        tint = Color.White,
+        modifier = Modifier
+            .padding(15.dp)
+            .size(30.dp)
+            .clickable {
+                activity?.finish()
+                customType(context, "fadein-to-fadeout")
+            }
+    )
+}
 
 @Composable
 fun SolutionButton(solution: MutableState<Boolean>) {
@@ -208,7 +216,7 @@ fun Cell(row: Int, col: Int) {
 //            .clip(
 //                RoundedCornerShape(2.dp)
 //            )
-            .background(if (fixed.value) CellColor else Color.White)
+            .background(if (fixed.value) CellHighlightColor else CellNormalColor)
             .clickable {
                 if (!fixed.value) {
                     // Color Change
@@ -245,38 +253,39 @@ fun MiddleButtons(correct: MutableState<Boolean>) {
 @Composable
 fun CheckButton(correct: MutableState<Boolean>) {
     val context = LocalContext.current
-    Text(modifier = Modifier
-        .padding(15.dp)
+    Text(
+        modifier = Modifier
+            .padding(15.dp)
 
-        .background(Color.White)
-        .clickable {
-            if (check()) {
-                var noZero = true
-                for (i in 0..8)
-                    for (j in 0..8)
-                        if (matrix[i][j] == 0) {
-                            noZero = false
-                            break
-                        }
-                if (noZero)
-                    correct.value = true
+            .background(Color.White)
+            .clickable {
+                if (check()) {
+                    var noZero = true
+                    for (i in 0..8)
+                        for (j in 0..8)
+                            if (matrix[i][j] == 0) {
+                                noZero = false
+                                break
+                            }
+                    if (noZero)
+                        correct.value = true
 
-                Toasty
-                    .success(context, "Correct!", Toast.LENGTH_SHORT, true)
-                    .show()
-            } else
-                Toasty
-                    .error(context, "Incorrect.", Toast.LENGTH_SHORT, true)
-                    .show()
-        }
-        .padding(6.dp),
+                    Toasty
+                        .success(context, "Correct!", Toast.LENGTH_SHORT, true)
+                        .show()
+                } else
+                    Toasty
+                        .error(context, "Incorrect.", Toast.LENGTH_SHORT, true)
+                        .show()
+            }
+            .padding(6.dp),
         text = "CHECK",
         fontSize = 22.sp,
         color = Color.Black,
         fontWeight = FontWeight.Light,
         letterSpacing = 5.sp,
 
-    )
+        )
 }
 
 
@@ -296,14 +305,15 @@ fun EraseButton() {
 //                .size(40.dp)
 //        )
 //    }
-    Text(modifier = Modifier
-        .padding(15.dp)
+    Text(
+        modifier = Modifier
+            .padding(15.dp)
 
-        .background(Color.White)
-        .clickable {
-            change = "0"
-        }
-        .padding(6.dp),
+            .background(Color.White)
+            .clickable {
+                change = "0"
+            }
+            .padding(6.dp),
         text = "ERASE",
         fontSize = 22.sp,
         color = Color.Black,
@@ -358,13 +368,14 @@ fun Dial(num: String = "", rels: List<MutableState<Boolean>>) {
             .width(60.dp)
             .padding(2.dp)
 
-            .background(if (rels[num.toInt() - 1].value) CellColor else Color.White)
+            .background(if (rels[num.toInt() - 1].value) CellHighlightColor else CellNormalColor)
             .clickable {
                 change = num
                 disableAll(rels)
                 rels[num.toInt() - 1].value = true
             }) {
-        Text(text = num,
+        Text(
+            text = num,
             Modifier
                 .align(Alignment.Center),
             fontSize = 26.sp,
@@ -379,18 +390,22 @@ fun Dial(num: String = "", rels: List<MutableState<Boolean>>) {
 // FINAL SCREEN
 
 @Composable
-fun FinalScreen(text: String, color: Color) {
+fun FinalScreen(text: String, color: Color = TextWhite) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        Text(text = text, fontSize = 70.sp, color = color, textAlign = TextAlign.Center)
-//        BackButton()
+        Text(
+            text = text,
+            fontSize = 50.sp,
+            color = color,
+            fontWeight = FontWeight.Light,
+            letterSpacing = 5.sp,
+            textAlign = TextAlign.Center
+        )
+        BackButton(60)
     }
 }
-
-
-
 
 
 /* ---------------------------------------------------------------------- */
@@ -405,5 +420,40 @@ fun disableAll(rels: List<MutableState<Boolean>>) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview2() {
-    App()
+    val solution = remember { mutableStateOf(true) }
+    val correct = remember { mutableStateOf(false) }
+    SudokuTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
+            Background(mutableStateOf(true))
+            Column {
+                Spacer(modifier = Modifier.padding(12.dp))
+                TopBar(solution)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (solution.value) {
+                        matrix = original.copy()
+                        Grid()
+                    } else
+                        Grid()
+                    when {
+                        correct.value -> {
+                            FinalScreen(text = "VICTORY!", color = TextWhite)
+
+                        }
+                        solution.value -> {
+                            FinalScreen(text = "TRY AGAIN", color = TextWhite)
+                        }
+                        else -> {
+                            MiddleButtons(correct)
+                            DialPad()
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
