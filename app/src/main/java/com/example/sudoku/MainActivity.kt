@@ -9,6 +9,8 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -33,7 +35,10 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import maes.tech.intentanim.CustomIntent.customType
 
 
@@ -59,28 +64,29 @@ class MainActivity : ComponentActivity() {
 @ExperimentalAnimationApi
 @Composable
 fun SudokuApp() {
+    val loading = remember{ mutableStateOf(false) }
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(true) {
         delay(1000)
         visible = true
     }
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
-        Background()
+        Background(loading)
         HeadingText()
         AnimatedVisibility(
             modifier = Modifier.fillMaxSize(),
             visible = visible,
             enter = fadeIn(animationSpec = tween(2000))
         ) {
-            ButtonsAndProgressBar()
+            ButtonsAndProgressBar(loading)
         }
     }
 }
 
 // COMPONENTS
-
 @Composable
-fun Background() {
+fun Background(loading: MutableState<Boolean>) {
+    val spacerHeight by animateFloatAsState(targetValue = if (loading.value) 1f else 0.7f, tween(1000))
     val delayController = remember { mutableStateOf(true) }
     LaunchedEffect(true) {
         stateChange(delayController)
@@ -146,7 +152,7 @@ fun Background() {
             close()
         }
         Column {
-            Spacer(modifier = Modifier.fillMaxHeight(0.7f))
+            Spacer(modifier = Modifier.fillMaxHeight(spacerHeight))
             Canvas(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -179,10 +185,8 @@ fun HeadingText() {
 
 
 @Composable
-fun ButtonsAndProgressBar() {
+fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
     // for progressBar
-    val loading = remember { mutableStateOf(false) }
-
     val context = LocalContext.current
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -239,7 +243,6 @@ fun ButtonsAndProgressBar() {
 
 // OTHER HELPER FUNCTIONS
 
-
 fun onClick(difficulty: String, context: Context, loading: MutableState<Boolean>) {
     getData(difficulty, context, loading)
 }
@@ -284,7 +287,10 @@ fun initialiseMatrix(response: String, context: Context, loading: MutableState<B
         col++
         k += 2
     }
-    loading.value = false
+    GlobalScope.launch(Dispatchers.Default) {
+        delay(1200)
+        loading.value = false
+    }
     startActivity(context, Intent(context, PrimaryActivity::class.java), null)
     customType(context, "fadein-to-fadeout")
 }

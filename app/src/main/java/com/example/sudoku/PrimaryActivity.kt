@@ -57,7 +57,7 @@ fun App() {
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
-            Background()
+            Background(mutableStateOf(true))
             Column {
                 TopBar(solution)
                 Column(
