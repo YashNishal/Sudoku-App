@@ -59,15 +59,19 @@ class MainActivity : ComponentActivity() {
 @ExperimentalAnimationApi
 @Composable
 fun SudokuApp() {
-    var visible by remember{ mutableStateOf(false) }
+    var visible by remember { mutableStateOf(false) }
     LaunchedEffect(true) {
-        delay(200)
+        delay(1000)
         visible = true
     }
     Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
         Background()
-        AnimatedVisibility(modifier = Modifier.fillMaxSize(), visible = visible, enter = fadeIn(animationSpec = tween(1500))) {
-            HeadingText()
+        HeadingText()
+        AnimatedVisibility(
+            modifier = Modifier.fillMaxSize(),
+            visible = visible,
+            enter = fadeIn(animationSpec = tween(2000))
+        ) {
             ButtonsAndProgressBar()
         }
     }
@@ -227,22 +231,21 @@ fun ButtonsAndProgressBar() {
                 .clickable { onClick("random", context, loading) }
         )
         Spacer(modifier = Modifier.height(70.dp))
-        if(loading.value)
+        if (loading.value)
             CircularProgressIndicator(color = Color.White)
     }
 }
 
 
-
 // OTHER HELPER FUNCTIONS
 
 
-fun onClick(difficulty: String, context: Context,loading : MutableState<Boolean>) {
-    getData(difficulty, context,loading)
+fun onClick(difficulty: String, context: Context, loading: MutableState<Boolean>) {
+    getData(difficulty, context, loading)
 }
 
 
-fun getData(difficulty: String, context: Context,loading : MutableState<Boolean>) {
+fun getData(difficulty: String, context: Context, loading: MutableState<Boolean>) {
     val queue = Volley.newRequestQueue(context)
     val url = "https://sugoku.herokuapp.com/board?difficulty=${difficulty}"
     loading.value = true
@@ -253,7 +256,7 @@ fun getData(difficulty: String, context: Context,loading : MutableState<Boolean>
         { response ->
             // Display the first 500 characters of the response string.
             Log.d("RESPONSE : $difficulty ", response.toString())
-            initialiseMatrix(response.toString(), context,loading)
+            initialiseMatrix(response.toString(), context, loading)
         },
         { Log.d("RESPONSE : ", "Error") })
 
@@ -262,7 +265,7 @@ fun getData(difficulty: String, context: Context,loading : MutableState<Boolean>
 }
 
 
-fun initialiseMatrix(response: String, context: Context,loading : MutableState<Boolean>) {
+fun initialiseMatrix(response: String, context: Context, loading: MutableState<Boolean>) {
     var k = 11
     var row = 0
     var col = 0
@@ -283,7 +286,7 @@ fun initialiseMatrix(response: String, context: Context,loading : MutableState<B
     }
     loading.value = false
     startActivity(context, Intent(context, PrimaryActivity::class.java), null)
-    customType(context,"fadein-to-fadeout")
+    customType(context, "fadein-to-fadeout")
 }
 
 @ExperimentalAnimationApi
