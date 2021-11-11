@@ -194,7 +194,7 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
     val context = LocalContext.current
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Spacer(modifier = Modifier.height(250.dp))
+        Spacer(modifier = Modifier.fillMaxHeight(0.325f))
         Text(modifier = Modifier
             .padding(4.dp)
             .pointerInteropFilter {

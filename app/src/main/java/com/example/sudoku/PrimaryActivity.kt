@@ -9,11 +9,8 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
@@ -33,13 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sudoku.ui.theme.*
 import es.dmoral.toasty.Toasty
+import kotlinx.coroutines.delay
 import maes.tech.intentanim.CustomIntent.customType
 
 var change = "0"
 
 @ExperimentalComposeUiApi
 class PrimaryActivity : ComponentActivity() {
-    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
 
         @Suppress("DEPRECATION")
@@ -53,9 +51,7 @@ class PrimaryActivity : ComponentActivity() {
         initializeToasty()
         super.onCreate(savedInstanceState)
         setContent {
-            val solution = remember { mutableStateOf(false) }
-            val correct = remember { mutableStateOf(false) }
-            App(solution, correct)
+            App()
         }
     }
 }
@@ -64,10 +60,32 @@ class PrimaryActivity : ComponentActivity() {
 /* ---------------------MAIN APP----------------------- */
 
 
-@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
-fun App(solution: MutableState<Boolean>, correct: MutableState<Boolean>) {
+fun App() {
+    val solution = remember { mutableStateOf(false) }
+    val correct = remember { mutableStateOf(false) }
+
+    val solAnim = remember { mutableStateOf(true) }
+    val corAnim = remember { mutableStateOf(true) }
+
+    val spacerHeight by animateFloatAsState(targetValue = if (solution.value or correct.value) 0.04f else 0f, tween(1000))
+    val fadeIn by animateFloatAsState(targetValue = if (solution.value or correct.value) 0f else 1f, tween(1000))
+
+    if (solution.value) {
+        LaunchedEffect(solution.value) {
+            delay(800)
+            solAnim.value = false
+        }
+    }
+
+    if (correct.value) {
+        LaunchedEffect(correct.value) {
+            delay(800)
+            corAnim.value = false
+        }
+    }
+
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
@@ -75,41 +93,36 @@ fun App(solution: MutableState<Boolean>, correct: MutableState<Boolean>) {
             Column {
                 Spacer(modifier = Modifier.padding(12.dp))
                 TopBar(solution)
+                Spacer(modifier = Modifier.fillMaxHeight(spacerHeight))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    if (solution.value) {
-                        matrix = original.copy()
-                        Grid()
-                    } else
-                        Grid()
-
-
-                    AnimatedVisibility(
-                        visible = correct.value,
-                        enter = fadeIn(animationSpec = tween(500)),
-                    ) {
-                        FinalScreen(text = "VICTORY!")
+                    Box {
+                        if (solution.value) {
+                            matrix = original.copy()
+                            Grid(0.9f)
+                        }
+                        if (solAnim.value) {
+                            Grid(fadeIn)
+                        }
                     }
-                    AnimatedVisibility(
-                        visible = solution.value,
-                        enter = fadeIn(animationSpec = tween(500))
-                    ) {
-                        FinalScreen(text = "TRY AGAIN")
-                    }
-
-                    AnimatedVisibility(
-                        visible = (!correct.value && !solution.value),
-                        exit = fadeOut(animationSpec = tween(500))
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceAround,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            MiddleButtons(correct)
-                            DialPad()
+                    Spacer(Modifier.fillMaxHeight(0.06f))
+                    Spacer(Modifier.fillMaxHeight(spacerHeight*6))
+                    when {
+                        correct.value -> {
+                            FinalScreen(text = "VICTORY!")
+                        }
+                        solution.value -> {
+                            FinalScreen(text = "TRY AGAIN")
+                        }
+                        else -> {
+                            Column (horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+                                .fillMaxSize()){
+                                MiddleButtons(correct)
+                                DialPad()
+                                Spacer(modifier = Modifier.padding(10.dp))
+                            }
                         }
                     }
                 }
@@ -188,8 +201,11 @@ fun SolutionButton(solution: MutableState<Boolean>) {
 
 
 @Composable
-fun Grid() {
-    Column(Modifier.padding(2.dp)) {
+fun Grid(f: Float) {
+    Column(
+        Modifier
+            .padding(2.dp)
+            .alpha(f)) {
         Row {
             SubGrid(0)
             SubGrid(1)
@@ -427,7 +443,6 @@ fun FinalScreen(text: String, color: Color = TextWhite) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        Spacer(modifier = Modifier.padding(top = 100.dp))
         Text(
             text = text,
             fontSize = 50.sp,
@@ -450,34 +465,46 @@ fun disableAll(dialStateList: List<MutableState<Boolean>>) {
     }
 }
 
-@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Preview(showBackground = true)
 @Composable
-fun PrimaryScreen() {
+fun DefaultPreview2() {
     val solution = remember { mutableStateOf(false) }
     val correct = remember { mutableStateOf(false) }
-    App(solution, correct)
-}
+    val fadeIn by animateFloatAsState(targetValue = if (solution.value or correct.value) 0f else 1f, tween(1000))
+    val fadeOut by animateFloatAsState(targetValue = if (solution.value or correct.value) 1f else 0f, tween(1000, 500))
+    SudokuTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
+            Background(mutableStateOf(true))
+            Column {
+                Spacer(modifier = Modifier.padding(12.dp))
+                TopBar(solution)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (solution.value) {
+                        matrix = original.copy()
+                        Grid(fadeIn)
+                    } else
+                        Grid(fadeOut)
+                    when {
+                        correct.value -> {
+                            FinalScreen(text = "VICTORY!", color = TextWhite)
 
-
-@ExperimentalAnimationApi
-@ExperimentalComposeUiApi
-@Preview(showBackground = true)
-@Composable
-fun TryAgainScreen() {
-    val solution = remember { mutableStateOf(true) }
-    val correct = remember { mutableStateOf(false) }
-    App(solution, correct)
-}
-
-
-@ExperimentalAnimationApi
-@ExperimentalComposeUiApi
-@Preview(showBackground = true)
-@Composable
-fun VictoryScreen() {
-    val solution = remember { mutableStateOf(false) }
-    val correct = remember { mutableStateOf(true) }
-    App(solution, correct)
+                        }
+                        solution.value -> {
+                            FinalScreen(text = "TRY AGAIN", color = TextWhite)
+                        }
+                        else -> {
+                            MiddleButtons(correct)
+                            DialPad()
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
