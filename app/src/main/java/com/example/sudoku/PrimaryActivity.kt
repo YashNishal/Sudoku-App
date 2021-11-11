@@ -9,6 +9,11 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,6 +39,7 @@ var change = "0"
 
 @ExperimentalComposeUiApi
 class PrimaryActivity : ComponentActivity() {
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
 
         @Suppress("DEPRECATION")
@@ -49,7 +55,7 @@ class PrimaryActivity : ComponentActivity() {
         setContent {
             val solution = remember { mutableStateOf(false) }
             val correct = remember { mutableStateOf(false) }
-            App(solution,correct)
+            App(solution, correct)
         }
     }
 }
@@ -58,9 +64,10 @@ class PrimaryActivity : ComponentActivity() {
 /* ---------------------MAIN APP----------------------- */
 
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Composable
-fun App(solution : MutableState<Boolean>,correct: MutableState<Boolean>) {
+fun App(solution: MutableState<Boolean>, correct: MutableState<Boolean>) {
     SudokuTheme {
         // A surface container using the 'background' color from the theme
         Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
@@ -70,7 +77,6 @@ fun App(solution : MutableState<Boolean>,correct: MutableState<Boolean>) {
                 TopBar(solution)
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier.fillMaxSize()
                 ) {
                     if (solution.value) {
@@ -78,26 +84,32 @@ fun App(solution : MutableState<Boolean>,correct: MutableState<Boolean>) {
                         Grid()
                     } else
                         Grid()
-                    when {
-                        correct.value -> {
-                            Box {
-                                FinalScreen(text = "VICTORY!")
-                            }
-                        }
-                        solution.value -> {
-                            Box {
-                                FinalScreen(text = "TRY AGAIN")
-                            }
-                        }
-                        else -> {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.SpaceAround,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                MiddleButtons(correct)
-                                DialPad()
-                            }
+
+
+                    AnimatedVisibility(
+                        visible = correct.value,
+                        enter = fadeIn(animationSpec = tween(500)),
+                    ) {
+                        FinalScreen(text = "VICTORY!")
+                    }
+                    AnimatedVisibility(
+                        visible = solution.value,
+                        enter = fadeIn(animationSpec = tween(500))
+                    ) {
+                        FinalScreen(text = "TRY AGAIN")
+                    }
+
+                    AnimatedVisibility(
+                        visible = (!correct.value && !solution.value),
+                        exit = fadeOut(animationSpec = tween(500))
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.SpaceAround,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            MiddleButtons(correct)
+                            DialPad()
                         }
                     }
                 }
@@ -415,6 +427,7 @@ fun FinalScreen(text: String, color: Color = TextWhite) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
+        Spacer(modifier = Modifier.padding(top = 100.dp))
         Text(
             text = text,
             fontSize = 50.sp,
@@ -437,31 +450,34 @@ fun disableAll(dialStateList: List<MutableState<Boolean>>) {
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Preview(showBackground = true)
 @Composable
 fun PrimaryScreen() {
     val solution = remember { mutableStateOf(false) }
     val correct = remember { mutableStateOf(false) }
-    App(solution,correct)
+    App(solution, correct)
 }
 
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Preview(showBackground = true)
 @Composable
 fun TryAgainScreen() {
     val solution = remember { mutableStateOf(true) }
     val correct = remember { mutableStateOf(false) }
-    App(solution,correct)
+    App(solution, correct)
 }
 
 
+@ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @Preview(showBackground = true)
 @Composable
 fun VictoryScreen() {
     val solution = remember { mutableStateOf(false) }
     val correct = remember { mutableStateOf(true) }
-    App(solution,correct)
+    App(solution, correct)
 }
