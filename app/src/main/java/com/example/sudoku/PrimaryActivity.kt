@@ -169,6 +169,7 @@ fun BackButton(size: Int) {
     )
 }
 
+@ExperimentalComposeUiApi
 @Composable
 fun SolutionButton(solution: MutableState<Boolean>) {
     val context = LocalContext.current
@@ -181,15 +182,19 @@ fun SolutionButton(solution: MutableState<Boolean>) {
         letterSpacing = 5.sp,
         modifier = Modifier
             .padding(15.dp)
-            .clickable {
-                Log.d("Before getSolution : ", original.contentDeepToString())
-                if (!getSolution()) {
-                    Toasty
-                        .error(context, "Unable to get Solution", Toast.LENGTH_SHORT, true)
-                        .show()
-                }
+            .pointerInteropFilter {
+                if(it.action == ACTION_UP) {
+                    Log.d("Before getSolution : ", original.contentDeepToString())
+                    if (!getSolution()) {
+                        Toasty
+                            .error(context, "Unable to get Solution", Toast.LENGTH_SHORT, true)
+                            .show()
+                    }
                 Log.d("After getSolution : ", original.contentDeepToString())
                 solution.value = true
+                }
+
+                true
             }
     )
 }
