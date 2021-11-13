@@ -69,8 +69,9 @@ fun App() {
     val solAnim = remember { mutableStateOf(true) }
     val corAnim = remember { mutableStateOf(true) }
 
-    val spacerHeight by animateFloatAsState(targetValue = if (solution.value or correct.value) 0.04f else 0f, tween(1000))
-    val fadeIn by animateFloatAsState(targetValue = if (solution.value or correct.value) 0f else 1f, tween(1000))
+    val spacerHeight by animateFloatAsState(targetValue = if (!solAnim.value or !corAnim.value) 0.04f else 0f, tween(1000))
+    val fadeIn by animateFloatAsState(targetValue = if (solution.value) 0f else 1f, tween(1000))
+    val fade by animateFloatAsState(targetValue = if (solution.value or correct.value) 0f else 1f, tween(1000))
 
     if (solution.value) {
         LaunchedEffect(solution.value) {
@@ -110,15 +111,15 @@ fun App() {
                     Spacer(Modifier.fillMaxHeight(0.06f))
                     Spacer(Modifier.fillMaxHeight(spacerHeight*6))
                     when {
-                        correct.value -> {
+                        !corAnim.value -> {
                             FinalScreen(text = "VICTORY!")
                         }
-                        solution.value -> {
+                        !solAnim.value -> {
                             FinalScreen(text = "TRY AGAIN")
                         }
                         else -> {
                             Column (horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier
-                                .fillMaxSize()){
+                                .fillMaxSize().alpha(fade)){
                                 MiddleButtons(correct)
                                 DialPad()
                                 Spacer(modifier = Modifier.padding(10.dp))
