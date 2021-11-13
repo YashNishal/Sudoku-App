@@ -1,4 +1,4 @@
-package com.example.sudoku.ui.theme
+package com.minimalsudoku.sudoku.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

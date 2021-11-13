@@ -1,4 +1,4 @@
-package com.example.sudoku.ui.theme
+package com.minimalsudoku.sudoku.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.sudoku.R
+import com.minimalsudoku.sudoku.R
 
 
 val fonts = FontFamily (

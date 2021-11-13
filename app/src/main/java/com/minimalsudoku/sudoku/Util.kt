@@ -1,4 +1,4 @@
-package com.example.sudoku
+package com.minimalsudoku.sudoku
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset

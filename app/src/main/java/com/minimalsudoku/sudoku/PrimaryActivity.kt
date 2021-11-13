@@ -1,4 +1,4 @@
-package com.example.sudoku
+package com.minimalsudoku.sudoku
 
 import android.app.Activity
 import android.os.Bundle
@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sudoku.ui.theme.*
+import com.minimalsudoku.sudoku.ui.theme.*
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.delay
 import maes.tech.intentanim.CustomIntent.customType

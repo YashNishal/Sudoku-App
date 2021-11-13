@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sudoku">
+    package="com.minimalsudoku.sudoku">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,12 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sudoku">
         <activity
-            android:name=".PrimaryActivity"
+            android:name="com.minimalsudoku.sudoku.PrimaryActivity"
             android:exported="false"
             android:label="@string/title_activity_primary"
             android:theme="@style/Theme.Sudoku.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.minimalsudoku.sudoku.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Sudoku.NoActionBar">

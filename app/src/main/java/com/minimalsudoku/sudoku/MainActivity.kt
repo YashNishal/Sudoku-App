@@ -1,4 +1,4 @@
-package com.example.sudoku
+package com.minimalsudoku.sudoku
 
 import android.content.Context
 import android.content.Intent
@@ -34,7 +34,7 @@ import androidx.core.content.ContextCompat.startActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.sudoku.ui.theme.*
+import com.minimalsudoku.sudoku.ui.theme.*
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope

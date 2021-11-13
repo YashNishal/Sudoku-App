@@ -1,4 +1,4 @@
-package com.example.sudoku
+package com.minimalsudoku.sudoku
 
 
 fun check() : Boolean {
