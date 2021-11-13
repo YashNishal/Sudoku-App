@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.MotionEvent.ACTION_UP
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
@@ -34,6 +35,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.sudoku.ui.theme.*
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -68,7 +70,8 @@ class MainActivity : ComponentActivity() {
 @ExperimentalAnimationApi
 @Composable
 fun SudokuApp() {
-    val loading = remember{ mutableStateOf(false) }
+
+    val loading = remember { mutableStateOf(false) }
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(true) {
         delay(1000)
@@ -90,7 +93,10 @@ fun SudokuApp() {
 // COMPONENTS
 @Composable
 fun Background(loading: MutableState<Boolean>) {
-    val spacerHeight by animateFloatAsState(targetValue = if (loading.value) 1f else 0.7f, tween(1000))
+    val spacerHeight by animateFloatAsState(
+        targetValue = if (loading.value) 1f else 0.7f,
+        tween(1000)
+    )
     val delayController = remember { mutableStateOf(true) }
     LaunchedEffect(true) {
         stateChange(delayController)
@@ -195,14 +201,15 @@ fun ButtonsAndProgressBar(loading: MutableState<Boolean>) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.fillMaxHeight(0.325f))
-        Text(modifier = Modifier
-            .padding(4.dp)
-            .pointerInteropFilter {
-                if (it.action == ACTION_UP) {
-                    onClick("easy", context, loading)
-                }
-                true
-            },
+        Text(
+            modifier = Modifier
+                .padding(4.dp)
+                .pointerInteropFilter {
+                    if (it.action == ACTION_UP) {
+                        onClick("easy", context, loading)
+                    }
+                    true
+                },
             text = "EASY",
             fontSize = 24.sp,
             color = TextWhite,
@@ -276,20 +283,27 @@ fun onClick(difficulty: String, context: Context, loading: MutableState<Boolean>
 fun getData(difficulty: String, context: Context, loading: MutableState<Boolean>) {
     val queue = Volley.newRequestQueue(context)
     val url = "https://sugoku.herokuapp.com/board?difficulty=${difficulty}"
-    loading.value = true
 
+
+    if (isConnected(context)) {
+        loading.value = true
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response ->
+                // Display the first 500 characters of the response string.
+                Log.d("RESPONSE : $difficulty ", response.toString())
+                initialiseMatrix(response.toString(), context, loading)
+            },
+            { Log.d("RESPONSE : ", "Error") })
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+    } else {
+        Toasty
+            .error(context, "No Internet available", Toast.LENGTH_LONG, true)
+            .show()
+    }
     // Request a string response from the provided URL.
-    val stringRequest = StringRequest(
-        Request.Method.GET, url,
-        { response ->
-            // Display the first 500 characters of the response string.
-            Log.d("RESPONSE : $difficulty ", response.toString())
-            initialiseMatrix(response.toString(), context, loading)
-        },
-        { Log.d("RESPONSE : ", "Error") })
-
-    // Add the request to the RequestQueue.
-    queue.add(stringRequest)
 }
 
 
