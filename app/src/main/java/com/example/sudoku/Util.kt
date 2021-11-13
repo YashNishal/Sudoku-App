@@ -1,7 +1,5 @@
 package com.example.sudoku
 
-import android.content.Context
-
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
@@ -35,7 +33,7 @@ fun initializeToasty() {
     Toasty.Config.getInstance()
 //        .tintIcon(boolean tintIcon) // optional (apply textColor also to the icon)
 //        .setTextSize(int sizeInSp) // optional
-        .allowQueue( false) // optional (prevents several Toastys from queuing)
+        .allowQueue( false) // optional (prevents several Toasts from queuing)
         .supportDarkTheme(true) // optional (whether to support dark theme or not)
 //        .setRTL(boolean isRTL) // optional (icon is on the right)
         .apply() // required
