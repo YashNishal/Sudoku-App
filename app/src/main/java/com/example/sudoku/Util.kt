@@ -1,13 +1,10 @@
 package com.example.sudoku
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
+
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.getSystemService
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.delay
 import java.io.IOException
@@ -38,7 +35,7 @@ fun initializeToasty() {
     Toasty.Config.getInstance()
 //        .tintIcon(boolean tintIcon) // optional (apply textColor also to the icon)
 //        .setTextSize(int sizeInSp) // optional
-        .allowQueue( true) // optional (prevents several Toastys from queuing)
+        .allowQueue( false) // optional (prevents several Toastys from queuing)
         .supportDarkTheme(true) // optional (whether to support dark theme or not)
 //        .setRTL(boolean isRTL) // optional (icon is on the right)
         .apply() // required
@@ -47,7 +44,7 @@ fun initializeToasty() {
 
 
 @Throws(InterruptedException::class, IOException::class)
-fun isConnected(context: Context): Boolean {
+fun isConnected(): Boolean {
     val command = "ping -c 1 google.com"
     return Runtime.getRuntime().exec(command).waitFor() == 0
 }

@@ -285,7 +285,7 @@ fun getData(difficulty: String, context: Context, loading: MutableState<Boolean>
     val url = "https://sugoku.herokuapp.com/board?difficulty=${difficulty}"
 
 
-    if (isConnected(context)) {
+    if (isConnected()) {
         loading.value = true
         val stringRequest = StringRequest(
             Request.Method.GET, url,
